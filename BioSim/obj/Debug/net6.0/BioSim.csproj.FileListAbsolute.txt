@@ -1,0 +1,15 @@
+C:\Users\Matthias\Desktop\code\biosim\BioSim\bin\Debug\net6.0\BioSim.exe
+C:\Users\Matthias\Desktop\code\biosim\BioSim\bin\Debug\net6.0\BioSim.deps.json
+C:\Users\Matthias\Desktop\code\biosim\BioSim\bin\Debug\net6.0\BioSim.runtimeconfig.json
+C:\Users\Matthias\Desktop\code\biosim\BioSim\bin\Debug\net6.0\BioSim.dll
+C:\Users\Matthias\Desktop\code\biosim\BioSim\bin\Debug\net6.0\ref\BioSim.dll
+C:\Users\Matthias\Desktop\code\biosim\BioSim\bin\Debug\net6.0\BioSim.pdb
+C:\Users\Matthias\Desktop\code\biosim\BioSim\obj\Debug\net6.0\BioSim.csproj.AssemblyReference.cache
+C:\Users\Matthias\Desktop\code\biosim\BioSim\obj\Debug\net6.0\BioSim.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Matthias\Desktop\code\biosim\BioSim\obj\Debug\net6.0\BioSim.AssemblyInfoInputs.cache
+C:\Users\Matthias\Desktop\code\biosim\BioSim\obj\Debug\net6.0\BioSim.AssemblyInfo.cs
+C:\Users\Matthias\Desktop\code\biosim\BioSim\obj\Debug\net6.0\BioSim.csproj.CoreCompileInputs.cache
+C:\Users\Matthias\Desktop\code\biosim\BioSim\obj\Debug\net6.0\BioSim.dll
+C:\Users\Matthias\Desktop\code\biosim\BioSim\obj\Debug\net6.0\ref\BioSim.dll
+C:\Users\Matthias\Desktop\code\biosim\BioSim\obj\Debug\net6.0\BioSim.pdb
+C:\Users\Matthias\Desktop\code\biosim\BioSim\obj\Debug\net6.0\BioSim.genruntimeconfig.cache
