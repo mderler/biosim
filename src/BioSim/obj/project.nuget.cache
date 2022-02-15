@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "Sz0kbXzU1PBfNssQEarPuUv5IyEyHvW42RWFbXV1+0Byjv/jdjKgZ2PVy4Ze2z+PktbzH4mjZoUJVfsNgqzIDg==",
+  "dgSpecHash": "ei4MrbCLnLcLQc3fjasctpEqrDPLdnf0wnExB+S+cabEXakGZ1mIeECG7aVu3JfR34Gbkc7ZjcBZnqWDaId+oQ==",
   "success": true,
-  "projectFilePath": "C:\\Users\\Matthias\\Desktop\\code\\biosim\\BioSim\\BioSim.csproj",
+  "projectFilePath": "C:\\Users\\Matthias\\Desktop\\code\\biosim\\src\\BioSim\\BioSim.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Matthias\\.nuget\\packages\\atksharp\\3.24.24.34\\atksharp.3.24.24.34.nupkg.sha512",
     "C:\\Users\\Matthias\\.nuget\\packages\\cairosharp\\3.24.24.34\\cairosharp.3.24.24.34.nupkg.sha512",

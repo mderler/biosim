@@ -192,11 +192,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Matthias\\Desktop\\code\\biosim\\BioSim\\BioSim.csproj",
+      "projectUniqueName": "C:\\Users\\Matthias\\Desktop\\code\\biosim\\src\\BioSim\\BioSim.csproj",
       "projectName": "BioSim",
-      "projectPath": "C:\\Users\\Matthias\\Desktop\\code\\biosim\\BioSim\\BioSim.csproj",
+      "projectPath": "C:\\Users\\Matthias\\Desktop\\code\\biosim\\src\\BioSim\\BioSim.csproj",
       "packagesPath": "C:\\Users\\Matthias\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Matthias\\Desktop\\code\\biosim\\BioSim\\obj\\",
+      "outputPath": "C:\\Users\\Matthias\\Desktop\\code\\biosim\\src\\BioSim\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\Matthias\\AppData\\Roaming\\NuGet\\NuGet.Config"
