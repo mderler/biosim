@@ -1,11 +1,11 @@
 using Gtk;
 using ImageMagick;
 
-class BioSimulatorGUI
+class BioSimulator
 {
     private Window _window;
 
-    public BioSimulatorGUI()
+    public BioSimulator()
     {
         _window = new Window("BioSim");
         _window.DeleteEvent += OnWindowDelete;
