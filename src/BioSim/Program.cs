@@ -7,6 +7,6 @@ public class Program
         Application.Init();
         BioSimulator gui = new BioSimulator();
         // gui.ImageTest();
-        gui.Run();
+        Application.Run();
     }
 }

@@ -8,7 +8,32 @@ class BioSimulator
     public BioSimulator()
     {
         _window = new Window("BioSim");
+        _window.SetDefaultSize(1270, 720);
         _window.DeleteEvent += OnWindowDelete;
+
+        Frame outerFrame = new Frame();
+        outerFrame.ShadowType = ShadowType.Out;
+        _window.Add(outerFrame);
+
+        HBox outerHBox = new HBox();
+        outerFrame.Add(outerHBox);
+        
+        VBox simulationList = new VBox();
+        simulationList.Add(new Label("This is the simulation list"));
+        simulationList.Add(new Label("This is the simulation list"));
+        simulationList.Add(new Label("This is the simulation list"));
+        simulationList.Add(new Label("This is the simulation list"));
+        simulationList.Add(new Label("This is the simulation list"));
+        outerHBox.Add(simulationList);
+
+        VBox controlPanel = new VBox();
+        controlPanel.Add(new Label("This is the control panel"));
+        controlPanel.Add(new Label("This is the control panel"));
+        controlPanel.Add(new Label("This is the control panel"));
+        controlPanel.Add(new Label("This is the control panel"));
+        controlPanel.Add(new Label("This is the control panel"));
+        outerHBox.Add(controlPanel);
+        _window.ShowAll();
     }
 
     public void ImageTest()
@@ -35,12 +60,6 @@ class BioSimulator
         Image image = new Image(tmpDir + "/image.png");
         image.Pixbuf = image.Pixbuf.ScaleSimple(800, 800, Gdk.InterpType.Tiles);
         _window.Add(image);
-    }
-
-    public void Run()
-    {
-        _window.ShowAll();
-        Application.Run();
     }
 
     private void OnWindowDelete(object sender, DeleteEventArgs e)
