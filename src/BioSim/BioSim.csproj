@@ -9,6 +9,7 @@
 
   <ItemGroup>
     <PackageReference Include="GtkSharp" Version="3.24.24.34" />
+    <PackageReference Include="Magick.NET-Q8-AnyCPU" Version="9.1.2" />
   </ItemGroup>
 
 </Project>

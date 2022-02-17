@@ -41,6 +41,10 @@
             "GtkSharp": {
               "target": "Package",
               "version": "[3.24.24.34, )"
+            },
+            "Magick.NET-Q8-AnyCPU": {
+              "target": "Package",
+              "version": "[9.1.2, )"
             }
           },
           "imports": [

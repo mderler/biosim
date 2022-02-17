@@ -1,7 +1,12 @@
-﻿public class Program
+﻿using Gtk;
+
+public class Program
 {
     public static void Main()
     {
-        System.Console.WriteLine("Hello World");
+        Application.Init();
+        BioSimulatorGUI gui = new BioSimulatorGUI();
+        // gui.ImageTest();
+        gui.Run();
     }
 }
