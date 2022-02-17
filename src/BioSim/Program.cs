@@ -5,7 +5,7 @@ public class Program
     public static void Main()
     {
         Application.Init();
-        BioSimulatorGUI gui = new BioSimulatorGUI();
+        BioSimulator gui = new BioSimulator();
         // gui.ImageTest();
         gui.Run();
     }
