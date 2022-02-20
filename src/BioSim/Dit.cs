@@ -2,10 +2,12 @@
 
 struct Dit
 {
+    public Tuple<uint, uint> Position { get; set; }
     public char[] Gene { get; }
 
-    public Dit(char[] gene)
+    public Dit(char[] gene, uint x, uint y)
     {
+        Position = new Tuple<uint, uint>(x, y);
         Gene = gene;
     }
 }
