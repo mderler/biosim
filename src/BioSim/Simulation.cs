@@ -1,21 +1,38 @@
 class Simulation
 {
-    private List<Dit> _population = new List<Dit>();
-
-    public Simulation(int initialPopulation, Tuple<uint, uint> worldSize)
+    private List<Dit> _dits = new List<Dit>();
+    private SimulationData _data;
+    public Simulation(SimulationData data)
     {
-        for (int i = 0; i < initialPopulation; i++)
+        _data = data;
+        for (int i = 0; i < _data.population; i++)
         {
-            _population.Add(new Dit());
+            //_dits.Add(new Dit());
         }
     }
 
-    private void UpdateDits()
+    private void MakeStep()
     {
         NeuralNetworkModel model = new NeuralNetworkModel(1, 2, 1);
-        foreach (var item in _population)
+        foreach (var dit in _dits)
         {
             
         }
     }
+
+    private void MakeGeneration()
+    {
+        Random rnd = new Random();
+        for (int i = 0; i < _dits.Count; i++)
+        {
+            
+        }
+    }
+}
+
+struct SimulationData
+{
+    public int population;
+    public (int x, int y) worldSize;
+    public int steps;
 }

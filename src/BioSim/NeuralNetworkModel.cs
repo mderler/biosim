@@ -4,11 +4,13 @@ struct NeuralNetworkModel
     public float[] InnerNeurons { get; }
     public float[] OuterNeurons { get; }
 
+    private List<(int, int, float)> _connections;
     public NeuralNetworkModel(int inputAmount, int innerAmount, int outerAmount)
     {
         InputNeurons = new float[inputAmount];
         InnerNeurons = new float[innerAmount];
         OuterNeurons = new float[outerAmount];
+        _connections = new List<(int, int, float)>();
     }
 
     public int Count => InputNeurons.Length+

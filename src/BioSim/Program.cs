@@ -22,7 +22,7 @@ public class Program
         Dit[] dits = new Dit[10];
         for (int i = 0; i < dits.Length; i++)
         {
-            dits[i] = new Dit();
+            // dits[i] = new Dit();
         }
     }
 }
