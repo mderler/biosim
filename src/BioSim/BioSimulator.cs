@@ -12,7 +12,6 @@ class BioSimulator
         _window.DeleteEvent += OnWindowDelete;
 
         Frame outerFrame = new Frame();
-        outerFrame.ShadowType = ShadowType.Out;
         _window.Add(outerFrame);
 
         HBox outerHBox = new HBox();
