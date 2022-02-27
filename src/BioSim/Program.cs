@@ -4,14 +4,14 @@ public class Program
 {
     public static void Main()
     {
-        // GuiTest();
+        GuiTest();
     }
 
     static void GuiTest()
     {
         Application.Init();
         BioSimulator gui = new BioSimulator();
-        gui.ImageTest();
+        // gui.ImageTest();
         Application.Run();
     }
 

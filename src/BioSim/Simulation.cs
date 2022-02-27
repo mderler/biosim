@@ -35,4 +35,13 @@ struct SimulationData
     public int population;
     public (int x, int y) worldSize;
     public int steps;
+    public string genomeReadSetting;
+
+    public SimulationData(int population, (int x, int y) worldSize, int steps, string genomeReadSetting)
+    {
+        this.population = population;
+        this.worldSize = worldSize;
+        this.steps = steps;
+        this.genomeReadSetting = genomeReadSetting;
+    }
 }

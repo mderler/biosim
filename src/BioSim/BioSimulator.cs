@@ -3,35 +3,15 @@ using ImageMagick;
 
 class BioSimulator
 {
-    private Window _window;
+    private BioSimWindow _window;
 
     public BioSimulator()
     {
-        _window = new Window("BioSim");
-        _window.SetDefaultSize(1270, 720);
-        _window.DeleteEvent += OnWindowDelete;
-
-        Frame outerFrame = new Frame();
-        _window.Add(outerFrame);
-
-        HBox outerHBox = new HBox();
-        outerFrame.Add(outerHBox);
+        _window = new BioSimWindow();
         
-        VBox simulationList = new VBox();
-        simulationList.Add(new Label("This is the simulation list"));
-        simulationList.Add(new Label("This is the simulation list"));
-        simulationList.Add(new Label("This is the simulation list"));
-        simulationList.Add(new Label("This is the simulation list"));
-        simulationList.Add(new Label("This is the simulation list"));
-        outerHBox.Add(simulationList);
-
-        VBox controlPanel = new VBox();
-        controlPanel.Add(new Label("This is the control panel"));
-        controlPanel.Add(new Label("This is the control panel"));
-        controlPanel.Add(new Label("This is the control panel"));
-        controlPanel.Add(new Label("This is the control panel"));
-        controlPanel.Add(new Label("This is the control panel"));
-        outerHBox.Add(controlPanel);
+        NewSimButton newSimButton = new NewSimButton();
+        _window.Add(newSimButton);
+        
         _window.ShowAll();
     }
 
@@ -59,10 +39,5 @@ class BioSimulator
         Image image = new Image(tmpDir + "/image.png");
         image.Pixbuf = image.Pixbuf.ScaleSimple(800, 800, Gdk.InterpType.Tiles);
         _window.Add(image);
-    }
-
-    private void OnWindowDelete(object sender, DeleteEventArgs e)
-    {
-        Application.Quit();
     }
 }
