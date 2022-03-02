@@ -1,23 +1,17 @@
+using System;
 using Gtk;
 
 class NewSimButton : Button
 {
     public NewSimButton() : base("New Simulation")
     {
-        Clicked += OnButtenClicked;
-    }
-
-    private void OnButtenClicked(object? sender, EventArgs e)
-    {
-        new NewSimWindow();
+        Clicked += delegate { new NewSimWindow(); };
     }
 }
 
 
 class NewSimWindow : Window
 {
-    private SimulationData _data;
-
     public NewSimWindow() : base("Create new Simulation")
     {
         VBox outer = new VBox();

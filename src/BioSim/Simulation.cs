@@ -1,4 +1,7 @@
-class Simulation
+using System;
+using System.Collections.Generic;
+
+public class Simulation
 {
     private List<Dit> _dits = new List<Dit>();
     private SimulationData _data;
@@ -30,7 +33,7 @@ class Simulation
     }
 }
 
-struct SimulationData
+public struct SimulationData
 {
     public int population;
     public (int x, int y) worldSize;

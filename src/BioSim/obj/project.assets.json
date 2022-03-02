@@ -1,7 +1,7 @@
 {
   "version": 3,
   "targets": {
-    "net6.0": {
+    "net5.0": {
       "AtkSharp/3.24.24.34": {
         "type": "package",
         "dependencies": {
@@ -278,35 +278,37 @@
     }
   },
   "projectFileDependencyGroups": {
-    "net6.0": [
+    "net5.0": [
       "GtkSharp >= 3.24.24.34",
       "Magick.NET-Q8-AnyCPU >= 9.1.2"
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Matthias\\.nuget\\packages\\": {}
+    "C:\\Users\\derler190063\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Matthias\\Desktop\\code\\biosim\\src\\BioSim\\BioSim.csproj",
+      "projectUniqueName": "C:\\Users\\derler190063\\Desktop\\sew\\biosim\\src\\BioSim\\BioSim.csproj",
       "projectName": "BioSim",
-      "projectPath": "C:\\Users\\Matthias\\Desktop\\code\\biosim\\src\\BioSim\\BioSim.csproj",
-      "packagesPath": "C:\\Users\\Matthias\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Matthias\\Desktop\\code\\biosim\\src\\BioSim\\obj\\",
+      "projectPath": "C:\\Users\\derler190063\\Desktop\\sew\\biosim\\src\\BioSim\\BioSim.csproj",
+      "packagesPath": "C:\\Users\\derler190063\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\derler190063\\Desktop\\sew\\biosim\\src\\BioSim\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\Matthias\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        "C:\\Users\\derler190063\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
-        "net6.0"
+        "net5.0"
       ],
       "sources": {
+        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
-        "net6.0": {
-          "targetAlias": "net6.0",
+        "net5.0": {
+          "targetAlias": "net5.0",
           "projectReferences": {}
         }
       },
@@ -317,8 +319,8 @@
       }
     },
     "frameworks": {
-      "net6.0": {
-        "targetAlias": "net6.0",
+      "net5.0": {
+        "targetAlias": "net5.0",
         "dependencies": {
           "GtkSharp": {
             "target": "Package",
@@ -344,7 +346,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.100\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.400\\RuntimeIdentifierGraph.json"
       }
     }
   }

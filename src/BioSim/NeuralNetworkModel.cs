@@ -1,4 +1,7 @@
-class NeuralNetworkModel
+using System;
+using System.Collections.Generic;
+
+public class NeuralNetworkModel
 {
     private float[] _inputNeurons;
     private float[] _innerNeurons;
@@ -63,7 +66,7 @@ class NeuralNetworkModel
         Random rnd = new Random();
         for (int i = 0; i < _outerNeurons.Length; i++)
         {
-            if (_outerNeurons[i] > rnd.NextSingle())
+            if (_outerNeurons[i] > (float)rnd.NextDouble())
             {
                 indexes[count] = i;
                 count++;
