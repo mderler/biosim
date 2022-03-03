@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "c:\\Users\\Matthias\\Desktop\\code\\biosim\\src\\BioSim\\BioSim.csproj": {}
+    "C:\\Users\\Matthias\\Desktop\\code\\biosim\\src\\BioSim\\BioSim.csproj": {}
   },
   "projects": {
-    "c:\\Users\\Matthias\\Desktop\\code\\biosim\\src\\BioSim\\BioSim.csproj": {
+    "C:\\Users\\Matthias\\Desktop\\code\\biosim\\src\\BioSim\\BioSim.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "c:\\Users\\Matthias\\Desktop\\code\\biosim\\src\\BioSim\\BioSim.csproj",
+        "projectUniqueName": "C:\\Users\\Matthias\\Desktop\\code\\biosim\\src\\BioSim\\BioSim.csproj",
         "projectName": "BioSim",
-        "projectPath": "c:\\Users\\Matthias\\Desktop\\code\\biosim\\src\\BioSim\\BioSim.csproj",
+        "projectPath": "C:\\Users\\Matthias\\Desktop\\code\\biosim\\src\\BioSim\\BioSim.csproj",
         "packagesPath": "C:\\Users\\Matthias\\.nuget\\packages\\",
-        "outputPath": "c:\\Users\\Matthias\\Desktop\\code\\biosim\\src\\BioSim\\obj\\",
+        "outputPath": "C:\\Users\\Matthias\\Desktop\\code\\biosim\\src\\BioSim\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\Matthias\\AppData\\Roaming\\NuGet\\NuGet.Config"
