@@ -10,7 +10,7 @@ public class Program
     static void GuiTest()
     {
         Application.Init();
-        BioSimulator gui = new BioSimulator();
+        BioSimulatorGUI gui = new BioSimulatorGUI();
         // gui.ImageTest();
         Application.Run();
     }
