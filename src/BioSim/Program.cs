@@ -1,5 +1,7 @@
 ﻿using Gtk;
 
+namespace BioSim;
+
 public class Program
 {
     public static void Main()

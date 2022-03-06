@@ -1,5 +1,7 @@
 using Gtk;
 
+namespace BioSim;
+
 class NewSimButton : Button
 {
     public NewSimButton() : base("New Simulation")

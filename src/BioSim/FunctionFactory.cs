@@ -1,3 +1,5 @@
+namespace BioSim;
+
 public class FunctionFactory
 {
     private List<(string name, InputFunction func)> _registerdInputFunctions;

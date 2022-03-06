@@ -1,6 +1,8 @@
 using Gtk;
 using ImageMagick;
 
+namespace BioSim;
+
 class BioSimulatorGUI
 {
     private BioSimWindow _window;

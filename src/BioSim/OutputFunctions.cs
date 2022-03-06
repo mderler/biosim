@@ -1,3 +1,6 @@
+
+namespace BioSim;
+
 public delegate void OutputFunction(ref Dit dit);
 
 public static class OutputFunctions

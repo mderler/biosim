@@ -1,5 +1,7 @@
 using Gtk;
 
+namespace BioSim;
+
 class SimulationViewer : Frame
 {
     private Image _stepImage;

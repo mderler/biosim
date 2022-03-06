@@ -1,3 +1,5 @@
+namespace BioSim;
+
 public delegate float InputFunction(Dit dit);
 
 public static class InputFunctions

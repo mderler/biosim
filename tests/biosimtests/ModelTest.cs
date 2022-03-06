@@ -1,12 +1,13 @@
 using Xunit;
+using BioSim;
 
 namespace biosimtests;
 
-public class UnitTest1
+public class ModelTest
 {
     [Fact]
     public void Test1()
     {
-
+        
     }
 }

@@ -1,3 +1,5 @@
+namespace BioSim;
+
 public class Model
 {
     private int _inputCount;

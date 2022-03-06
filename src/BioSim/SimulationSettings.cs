@@ -1,3 +1,5 @@
+namespace BioSim;
+
 public struct SimulationSettings
 {
     public uint steps;
