@@ -7,6 +7,7 @@ public class Model
     private int _outputCount;
 
     private (int src, int dst, float wht)[] _connections;
+    public (int src, int dst, float wht)[] Connections => _connections;
     private float _mutateChance;
 
     public Model(int inputCount, int innerCount, int outputCount, int connections, float mutateChance)
@@ -42,13 +43,28 @@ public class Model
 
     public void Randomize()
     {
+        List<(int src, int dst, float wht)> tmp = new List<(int, int, float)>();
         Random rnd = new Random();
 
         for (int i = 0; i < _connections.Length; i++)
         {
-            _connections[i].src = rnd.Next(_inputCount+_innerCount);
-            _connections[i].dst = rnd.Next(_innerCount+_outputCount);
-            _connections[i].wht = rnd.NextSingle()*8-4;
+            (int src, int dst, float wht) t = new (   
+                rnd.Next(_inputCount+_innerCount),
+                rnd.Next(_innerCount+_outputCount),
+                rnd.NextSingle()*8-4);
+            if (tmp.Count == 0 || tmp[tmp.Count-1].src < t.src)
+                tmp.Add(t);
+            else
+            {
+                for (int j = 0; j < tmp.Count; j++)
+                {
+                    if (tmp[j].src >= t.src)
+                    {
+                        tmp.Insert(j, t);
+                        break;
+                    }
+                }
+            }
         }
     }
 }
