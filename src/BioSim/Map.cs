@@ -1,3 +1,5 @@
+using ImageMagick;
+
 namespace BioSim;
 
 public class Map
@@ -9,9 +11,11 @@ public class Map
 
     public int Width => _width;
     public int Height => _height;
+
     public Map(string path)
     {
         _mapData = new byte[0][];
+
     }
 
     public byte GetSpot(int x, int y)
