@@ -1,7 +1,7 @@
 using BioSim;
 using ImageMagick;
 using Xunit;
-using Xunit.Abstractions;
+using System;
 
 namespace biosimtests;
 
@@ -30,7 +30,10 @@ public class MapTest
     [Fact]
     public void TestData()
     {
+        Random rnd = new Random();
+
         byte[] data = new byte[5*5*3];
+        rnd.NextBytes(data);
         
 
         CreateTestImage(data);
