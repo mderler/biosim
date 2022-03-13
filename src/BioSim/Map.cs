@@ -11,48 +11,63 @@ public class Map
         wall = 2
     }
 
-    // TODO: test if a 1-dim. Array with x+y*width would be faster
+    // TODO: Make a config file contaning interpetrations, add dit
+    private readonly (byte r, byte g, byte b, byte c)[] _mappings =
+    {
+        (255, 255, 255, 0),
+        (  0, 255,   0, 1),
+        ( 20,  20,  20, 2)
+    };
+
     private CellType[][] _mapData;
- 
+
     public int Width { get; private set; }
     public int Height { get; private set; }
 
     public Map(string path)
     {
-        // TODO: Make a config file contaning interpretations
-        (byte r, byte g, byte b, byte c)[] interp =
-        {
-            (255, 255, 255, 0),
-            (  0,   0,   0, 0),
-            (  0, 255,   0, 1),
-            ( 20,  20,  20, 2)
-        };
-
         MagickImage image = new MagickImage(path);
         Width = image.Width;
         Height = image.Height;
-        byte[] data = image.ToByteArray();
 
         _mapData = new CellType[Height][];
+
+        Interpetrate(image);
+    }
+
+    private void Interpetrate(MagickImage image)
+    {
+        byte[]? data = image.GetPixels().ToByteArray(0, 0, Width, Height, "RGB");
+
+        if (data == null)
+            throw new Exception("Image data must not be null");
+        
 
         for (int i = 0; i < data.Length; i+=3)
         {
             int p = i/3;
             int y = p/Width;
-            int x = p-y*Width;
+            int x = p%Width;
 
-            _mapData[p] = new CellType[Width];
+            if (x==0)
+                _mapData[y] = new CellType[Width];
 
-            (byte r, byte g, byte b) pixel = (data[i], data[i+1], data[1+2]);
-           foreach (var item in interp)
-           {
-               if ((item.r, item.g, item.b) == pixel)
-               {
-                   _mapData[y][x] = (CellType)item.c;
-               }
-           }
+            // Is the score high, the mapping is bad 
+            int bestScore = int.MaxValue;
+            foreach (var item in _mappings)
+            {
+                int score = 0;
+                score += Math.Abs(item.r-data[i]);
+                score += Math.Abs(item.g-data[i+1]);
+                score += Math.Abs(item.b-data[i+2]);
+
+                if (score <= bestScore)
+                {
+                    _mapData[y][x] = (CellType)item.c;
+                    bestScore = score;
+                }
+            }
         }
-        
     }
 
     public CellType GetSpot(int x, int y)
