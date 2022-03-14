@@ -1,6 +1,8 @@
 using BioSim;
 using ImageMagick;
 using Xunit;
+using System;
+using System.IO;
 
 namespace biosimtests;
 
@@ -104,8 +106,28 @@ public class MapTest
         Assert.Equal<Map.CellType[]>(expected, actual);
     }
 
+    [Fact]
+    public void TestException()
+    {
+        void CreateMap()
+        {
+            new Map("");
+        }
+
+        Assert.Throws<Exception>(CreateMap);
+    }
+
     private void CreateTestImage(byte[] data, int width)
     {
+        string? currentDir = Path.GetDirectoryName(_imageDir);
+        if (currentDir == null)
+        {
+            throw new Exception("Directory must not be null");
+        }
+        if (!Directory.Exists(currentDir))
+        {
+            Directory.CreateDirectory(currentDir);
+        }
         MagickReadSettings mrs = new MagickReadSettings();
         mrs.Format = MagickFormat.Rgb;
         mrs.Width = width;

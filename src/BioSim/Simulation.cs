@@ -31,6 +31,18 @@ public class Simulation
 
     public bool Update()
     {
+        // check if simulation is still running
+        if (_currentGeneration >= _settings.generations)
+            return false;
+        if (_currentStep >= _settings.steps-1)
+        {
+            _currentStep = 0;
+            _currentGeneration++;
+        } else
+        {
+            _currentStep++;
+        }
+
         // update dits
         float[] inputs = new float[_settings.inputFunctions.Length];
         foreach (var dit in _dits)
@@ -47,16 +59,7 @@ public class Simulation
             }
         }
 
-        // check if simulation is finished
-        if (_currentGeneration >= _settings.generations)
-            return true;
-        if (_currentStep >= _settings.steps)
-        {
-            _currentStep = 0;
-            _currentGeneration++;
-        } else
-            _currentStep++;
-        return false;
+        return true;
     }
 
     public void SaveState()
