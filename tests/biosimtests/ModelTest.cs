@@ -8,17 +8,24 @@ public class ModelTest
     [Fact]
     public void TestConstuct()
     {
-        Model model = new Model(3, 2, 3, 18, 1);
+        Model model = new Model(new SimulationSettings());
     }
 
     [Fact]
     public void TestRandom()
     {
-        int inputCount = 3;
-        int innerCount = 2;
-        int outputCount = 3;
-        int con = 18;
-        Model model = new Model(inputCount, innerCount, outputCount, con, 1);
+        int innerCount = 10;
+        int inputCount = 5;
+        int outputCount = 7;
+        SimulationSettings settings = new SimulationSettings()
+        {
+            inputFunctions = new InputFunction[inputCount],
+            innerNeurons = innerCount,
+            outputFunctions = new OutputFunction[outputCount],
+            connections = 20,
+            mutateChance = 1
+        };
+        Model model = new Model(settings);
         model.Randomize();
 
         var connections = model.Connections;

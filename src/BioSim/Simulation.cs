@@ -15,12 +15,7 @@ public class Simulation
 
         for (int i = 0; i < settings.initialPopulation; i++)
         {
-            Model model = new Model(
-                settings.inputFunctions.Length,
-                settings.innerNeurons,
-                settings.outputFunctions.Length,
-                settings.connections,
-                settings.mutateChance);
+            Model model = new Model(settings);
             model.Randomize();
             Random rnd = new Random();
             int x = rnd.Next(settings.map.Width);
@@ -33,7 +28,9 @@ public class Simulation
     {
         // check if simulation is still running
         if (_currentGeneration >= _settings.generations)
+        {
             return false;
+        }
         if (_currentStep >= _settings.steps-1)
         {
             _currentStep = 0;
@@ -55,7 +52,9 @@ public class Simulation
             for (int i = 0; i < outputs.Length; i++)
             {
                 if (outputs[i])
+                {
                     _settings.outputFunctions[i](in dit);
+                }
             }
         }
 
