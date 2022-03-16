@@ -13,6 +13,11 @@ public class Simulation
     {
         _settings = settings;
 
+        if (settings.map == null)
+        {
+            throw new Exception("Settings map must not be null");
+        }
+
         for (int i = 0; i < settings.initialPopulation; i++)
         {
             Model model = new Model(settings);

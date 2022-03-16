@@ -10,6 +10,7 @@ public class SimulationTest
     public void TestConstuct()
     {
         SimulationSettings settings = new SimulationSettings();
+        settings.map = new Map("");
         Simulation simulation = new Simulation(settings);
     }
 
