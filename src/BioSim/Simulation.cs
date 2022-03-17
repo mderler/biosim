@@ -2,66 +2,63 @@ namespace BioSim;
 
 public class Simulation
 {
+    public Map? SimMap { get; set; }
+    public int Generations { get; set; }
+    public int Steps { get; set; }
+    public InputFunction[]? InputFunctions { get; set; }
+    public OutputFunction[]? OutputFunctions { get; set; }
     private List<Dit> _dits = new List<Dit>();
 
     private int _currentStep = 0;
     private int _currentGeneration = 0;
 
-    private SimulationSettings _settings;
-
-    public Simulation(SimulationSettings settings)
+    public void Setup()
     {
-        _settings = settings;
-
-        if (settings.map == null)
-        {
-            throw new Exception("Settings map must not be null");
-        }
-
-        for (int i = 0; i < settings.initialPopulation; i++)
-        {
-            Model model = new Model(settings);
-            model.Randomize();
-            Random rnd = new Random();
-            int x = rnd.Next(settings.map.Width);
-            int y = rnd.Next(settings.map.Height);
-            _dits.Add(new Dit((x, y), model));
-        }
+        
     }
 
     public bool Update()
     {
-        // check if simulation is still running
-        if (_currentGeneration >= _settings.generations)
-        {
-            return false;
-        }
-        if (_currentStep >= _settings.steps-1)
-        {
-            _currentStep = 0;
-            _currentGeneration++;
-        } else
-        {
-            _currentStep++;
-        }
-
-        // update dits
-        float[] inputs = new float[_settings.inputFunctions.Length];
-        foreach (var dit in _dits)
-        {
-            for (int i = 0; i < inputs.Length; i++)
+        #region Check fields
+            if (SimMap == null || InputFunctions == null || OutputFunctions == null)
             {
-                inputs[i] = _settings.inputFunctions[i](dit, this);
+                throw new Exception("Fields of the simulation must not equal null.");
             }
-            bool[] outputs = dit.model.GetOutput(inputs);
-            for (int i = 0; i < outputs.Length; i++)
+        #endregion
+
+        #region Check if finished
+            if (_currentGeneration >= Generations)
             {
-                if (outputs[i])
+                return false;
+            }
+            if (_currentStep >= Steps-1)
+            {
+                _currentStep = 0;
+                _currentGeneration++;
+            } else
+            {
+                _currentStep++;
+            }
+        #endregion
+
+        #region Update dits
+            float[] inputs = new float[InputFunctions.Length];
+            foreach (var dit in _dits)
+            {
+                for (int i = 0; i < inputs.Length; i++)
                 {
-                    _settings.outputFunctions[i](in dit, this);
+                    inputs[i] = InputFunctions[i](dit, this);
+                }
+                bool[] outputs = dit.model.GetOutput(inputs);
+                for (int i = 0; i < outputs.Length; i++)
+                {
+                    if (outputs[i])
+                    {
+                        OutputFunctions[i](in dit, this);
+                    }
                 }
             }
-        }
+        #endregion
 
         return true;
     }
