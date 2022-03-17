@@ -8,13 +8,13 @@ namespace biosimtests;
 
 public class MapTest
 {
-    private string _imageDir = "../tmp/image.png";
+    private const string _imageDir = "../tmp/image.png";
 
     [Fact]
     public void TestConstuct()
     {
         byte[] data = {255, 255, 255};
-        CreateTestImage(data, 1);
+        TestDirHelper.CreateTestImage(data, 1, _imageDir);
         Map map = new Map(_imageDir);
     }
 
@@ -22,7 +22,7 @@ public class MapTest
     public void TestDataPixel()
     {
         byte[] data = {255, 255, 255};
-        CreateTestImage(data, 1);
+        TestDirHelper.CreateTestImage(data, 1, _imageDir);
         Map map = new Map(_imageDir);
 
         Assert.Equal<Map.CellType>(Map.CellType.space, map.GetSpot(0, 0));
@@ -91,7 +91,7 @@ public class MapTest
 
         Map.CellType[] actual = new Map.CellType[5*5];
 
-        CreateTestImage(data, 5);
+        TestDirHelper.CreateTestImage(data, 5, _imageDir);
         Map map = new Map(_imageDir);
 
         for (int y = 0; y < map.Height; y++)
@@ -114,25 +114,6 @@ public class MapTest
             new Map("");
         }
 
-        Assert.Throws<Exception>(CreateMap);
-    }
-
-    private void CreateTestImage(byte[] data, int width)
-    {
-        string? currentDir = Path.GetDirectoryName(_imageDir);
-        if (currentDir == null)
-        {
-            throw new Exception("Directory must not be null");
-        }
-        if (!Directory.Exists(currentDir))
-        {
-            Directory.CreateDirectory(currentDir);
-        }
-        MagickReadSettings mrs = new MagickReadSettings();
-        mrs.Format = MagickFormat.Rgb;
-        mrs.Width = width;
-        mrs.Height = data.Length/3/width;
-        MagickImage mImage = new MagickImage(data, mrs);
-        mImage.Write(_imageDir, MagickFormat.Png);
+        Assert.ThrowsAny<Exception>(CreateMap);
     }
 }

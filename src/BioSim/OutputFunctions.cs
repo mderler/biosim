@@ -1,12 +1,9 @@
 
 namespace BioSim;
 
-public delegate void OutputFunction(in Dit dit);
+public delegate void OutputFunction(in Dit dit, Simulation simulation);
 
 public static class OutputFunctions
 {
-    public static void PrintPositionTest(in Dit dit)
-    {
-        System.Console.WriteLine(dit.position);
-    }
+
 }

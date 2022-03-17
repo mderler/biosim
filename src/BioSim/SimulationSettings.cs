@@ -12,7 +12,7 @@ public class SimulationSettings
     public int innerNeurons;
     public int connections;
     public int mutateChance;
-    public int mutateStrength;
+    public float mutateStrength;
 
     public SimulationSettings()
     {

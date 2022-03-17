@@ -51,14 +51,14 @@ public class Simulation
         {
             for (int i = 0; i < inputs.Length; i++)
             {
-                inputs[i] = _settings.inputFunctions[i](dit);
+                inputs[i] = _settings.inputFunctions[i](dit, this);
             }
             bool[] outputs = dit.model.GetOutput(inputs);
             for (int i = 0; i < outputs.Length; i++)
             {
                 if (outputs[i])
                 {
-                    _settings.outputFunctions[i](in dit);
+                    _settings.outputFunctions[i](in dit, this);
                 }
             }
         }

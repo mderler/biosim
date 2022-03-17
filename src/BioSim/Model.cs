@@ -62,6 +62,8 @@ public class Model
                 }
             }
         }
+
+        _connections = tmp.ToArray();
     }
 
     public void Mutate()
@@ -70,7 +72,50 @@ public class Model
 
         if (rnd.NextSingle() < _settings.mutateChance)
         {
+            List<(int src, int dst, float wht)> tmp = new List<(int, int, float)>(_connections);
 
+            int changeAmount = (int)(_connections.Length * _settings.mutateStrength);
+            byte[] pickedFields = new byte[3];
+
+            for (int i = 0; i < changeAmount; i++)
+            {
+                rnd.NextBytes(pickedFields);
+                int index = rnd.Next(_connections.Length);
+                var change = tmp[index];
+                tmp.RemoveAt(index);
+                
+                if (pickedFields[0] % 2 == 0)
+                {
+                    change.src = rnd.Next(_inputCount+_settings.innerNeurons);
+                    if (change.src > tmp[tmp.Count-1].src)
+                    {
+                        tmp.Add(change);
+                    }
+                    else
+                    {
+                        for (int j = 0; j < tmp.Count; j++)
+                        {
+                            if (change.src <= tmp[j].src)
+                            {
+                                index = j;
+                                break;
+                            }
+                        }
+                    }
+                }
+                if (pickedFields[1] % 2 == 0)
+                {
+                    change.dst = rnd.Next(_settings.innerNeurons+_outputCount);
+                }
+                if (pickedFields[2] % 2 == 0)
+                {
+                    change.wht = rnd.NextSingle()*8-4;
+                }
+
+                tmp.Insert(index, change);
+            }
+
+            _connections = tmp.ToArray();
         }
     }
 }

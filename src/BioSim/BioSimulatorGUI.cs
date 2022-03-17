@@ -11,8 +11,6 @@ class BioSimulatorGUI
     public BioSimulatorGUI()
     {
         _simulationFactory = new FunctionFactory();
-        _simulationFactory.RegisterIOFunction("Input Test", InputFunctions.GetOneTest);
-        _simulationFactory.RegisterIOFunction("Output Test", OutputFunctions.PrintPositionTest);
         _window = new BioSimWindow();
         
         NewSimButton newSimButton = new NewSimButton();
