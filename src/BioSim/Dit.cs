@@ -1,13 +1,13 @@
-// A Dit is a little creature evolving over time
+namespace BioSim;
 
 public class Dit
 {
-    public (int x, int y) Position { get; set; }
-    public int Age { get; set; }
+    public (int x, int y) position; 
+    public Model model;
 
-    public Dit((int x, int y) position)
+    public Dit((int, int) position, Model model)
     {
-        Position = position;
-        Age = 0;
+        this.position = position;
+        this.model = model;
     }
 }

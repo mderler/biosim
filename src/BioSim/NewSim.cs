@@ -1,5 +1,7 @@
 using Gtk;
 
+namespace BioSim;
+
 class NewSimButton : Button
 {
     public NewSimButton() : base("New Simulation")
@@ -16,8 +18,6 @@ class NewSimButton : Button
 
 class NewSimWindow : Window
 {
-    private SimulationData _data;
-
     public NewSimWindow() : base("Create new Simulation")
     {
         VBox outer = new VBox();

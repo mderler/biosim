@@ -1,4 +1,7 @@
+using System;
 using Gtk;
+
+namespace BioSim;
 
 class SimulationViewer : Frame
 {

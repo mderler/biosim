@@ -1,47 +1,78 @@
-class Simulation
+namespace BioSim;
+
+public class Simulation
 {
     private List<Dit> _dits = new List<Dit>();
-    private SimulationData _data;
-    public Simulation(SimulationData data)
+
+    private int _currentStep = 0;
+    private int _currentGeneration = 0;
+
+    private SimulationSettings _settings;
+
+    public Simulation(SimulationSettings settings)
     {
-        _data = data;
-        for (int i = 0; i < _data.population; i++)
+        _settings = settings;
+
+        if (settings.map == null)
         {
-            //_dits.Add(new Dit());
+            throw new Exception("Settings map must not be null");
+        }
+
+        for (int i = 0; i < settings.initialPopulation; i++)
+        {
+            Model model = new Model(settings);
+            model.Randomize();
+            Random rnd = new Random();
+            int x = rnd.Next(settings.map.Width);
+            int y = rnd.Next(settings.map.Height);
+            _dits.Add(new Dit((x, y), model));
         }
     }
 
-    private void MakeStep()
+    public bool Update()
     {
-        NeuralNetworkModel model = new NeuralNetworkModel(1, 2, 1);
+        // check if simulation is still running
+        if (_currentGeneration >= _settings.generations)
+        {
+            return false;
+        }
+        if (_currentStep >= _settings.steps-1)
+        {
+            _currentStep = 0;
+            _currentGeneration++;
+        } else
+        {
+            _currentStep++;
+        }
+
+        // update dits
+        float[] inputs = new float[_settings.inputFunctions.Length];
         foreach (var dit in _dits)
         {
-            
+            for (int i = 0; i < inputs.Length; i++)
+            {
+                inputs[i] = _settings.inputFunctions[i](dit, this);
+            }
+            bool[] outputs = dit.model.GetOutput(inputs);
+            for (int i = 0; i < outputs.Length; i++)
+            {
+                if (outputs[i])
+                {
+                    _settings.outputFunctions[i](in dit, this);
+                }
+            }
         }
+
+        return true;
     }
 
-    private void MakeGeneration()
+    public void SaveState()
     {
-        Random rnd = new Random();
-        for (int i = 0; i < _dits.Count; i++)
-        {
-            
-        }
+        
     }
-}
 
-struct SimulationData
-{
-    public int population;
-    public (int x, int y) worldSize;
-    public int steps;
-    public string genomeReadSetting;
-
-    public SimulationData(int population, (int x, int y) worldSize, int steps, string genomeReadSetting)
+    public void LoadState()
     {
-        this.population = population;
-        this.worldSize = worldSize;
-        this.steps = steps;
-        this.genomeReadSetting = genomeReadSetting;
+
     }
 }
