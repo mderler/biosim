@@ -8,11 +8,12 @@ public class Map
     {
         space = 0,
         survive = 1,
-        wall = 2
+        wall = 2,
+        dit = 3
     }
 
-    // TODO: Make a config file contaning interpetrations, add dit
-    private readonly (byte r, byte g, byte b, byte c)[] _mappings =
+    // TODO: Make a config file contaning interpetrations + add dit
+    private readonly (byte r, byte g, byte b, byte c)[] _defaultMappings =
     {
         (255, 255, 255, 0),
         (  0, 255,   0, 1),
@@ -35,6 +36,15 @@ public class Map
         Interpetrate(image);
     }
 
+    // TODO: finish this method
+    public void ReadMapping(string path)
+    {
+        StreamReader sr = new StreamReader(path);
+        string text = sr.ReadToEnd();
+
+        string[] data = text.Split(',');
+    }
+
     private void Interpetrate(MagickImage image)
     {
         byte[]? data = image.GetPixels().ToByteArray(0, 0, Width, Height, "RGB");
@@ -54,7 +64,7 @@ public class Map
 
             // Is the score high, the mapping is bad 
             int bestScore = int.MaxValue;
-            foreach (var item in _mappings)
+            foreach (var item in _defaultMappings)
             {
                 int score = 0;
                 score += Math.Abs(item.r-data[i]);
@@ -73,5 +83,10 @@ public class Map
     public CellType GetSpot(int x, int y)
     {
         return _mapData[y][x];
+    }
+
+    public CellType GetSpot((int x, int y) position)
+    {
+        return _mapData[position.y][position.x];
     }
 }

@@ -16,6 +16,7 @@ public class Model
         set 
         {
             _connections = new List<(int, int, float, bool)>(value);
+            _connectionCount = value.Length;
             CleanModel();
         }
     }
@@ -167,12 +168,13 @@ public class Model
                     if (!inCon.Contains(i))
                     {
                         inCon.Add(i);
+                        changed = true;
                     }
                     if (!intmp.Contains(_connections[i].dst))
                     {
                         intmp.Add(_connections[i].dst);
+                        changed = true;
                     }
-                    changed = true;
                 }
 
                 // check and add the connections that are directly or indirectly
@@ -183,12 +185,13 @@ public class Model
                     if (!outCon.Contains(i))
                     {
                         outCon.Add(i);
+                        changed = true;
                     }
                     if (!outtmp.Contains(_connections[i].src))
                     {
                         outtmp.Add(_connections[i].src);
+                        changed = true;
                     }
-                    changed = true;
                 }
             }
         } while (changed);

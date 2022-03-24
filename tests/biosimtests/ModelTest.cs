@@ -181,6 +181,9 @@ public class ModelTest
         }; 
 
         Model model = new Model();
+        model.InputCount = 12;
+        model.InnerCount = 16;
+        model.OutputCount = 11;
         model.Connections = connections;
 
         for (int i = 0; i < model.ConnectionCount; i++)

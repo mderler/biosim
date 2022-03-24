@@ -19,48 +19,69 @@ public class Simulation
 
     public bool Update()
     {
-        #region Check fields
-            if (SimMap == null || InputFunctions == null || OutputFunctions == null)
-            {
-                throw new Exception("Fields of the simulation must not equal null.");
-            }
-        #endregion
+        if (_currentGeneration >= Generations)
+        {
+            return false;
+        }
 
-        #region Check if finished
-            if (_currentGeneration >= Generations)
-            {
-                return false;
-            }
-            if (_currentStep >= Steps-1)
-            {
-                _currentStep = 0;
-                _currentGeneration++;
-            } else
-            {
-                _currentStep++;
-            }
-        #endregion
+        DoStep();
+        _currentStep++;
 
-        #region Update dits
-            float[] inputs = new float[InputFunctions.Length];
-            foreach (var dit in _dits)
-            {
-                for (int i = 0; i < inputs.Length; i++)
-                {
-                    inputs[i] = InputFunctions[i](dit, this);
-                }
-                bool[] outputs = dit.model.GetOutput(inputs);
-                for (int i = 0; i < outputs.Length; i++)
-                {
-                    if (outputs[i])
-                    {
-                        OutputFunctions[i](in dit, this);
-                    }
-                }
-            }
-        #endregion
+        if (_currentStep >= Steps-1)
+        {
+            DoGeneration();
+            _currentStep = 0;
+            _currentGeneration++;
+        }
 
         return true;
+    }
+
+    private void DoStep()
+    {
+        if (SimMap == null || InputFunctions == null || OutputFunctions == null)
+        {
+            throw new Exception("Fields of the simulation must not equal null.");
+        }
+
+        float[] inputs = new float[InputFunctions.Length];
+        foreach (var dit in _dits)
+        {
+            for (int i = 0; i < inputs.Length; i++)
+            {
+                inputs[i] = InputFunctions[i](dit, this);
+            }
+            bool[] outputs = dit.model.GetOutput(inputs);
+            for (int i = 0; i < outputs.Length; i++)
+            {
+                if (outputs[i])
+                {
+                    OutputFunctions[i](in dit, this);
+                }
+            }
+        }
+    }
+
+    private void DoGeneration()
+    {
+        if (SimMap == null)
+        {
+            throw new Exception("SimMap must not be null.");
+        }
+
+        List<Dit> ditsToKill = new List<Dit>();
+        foreach (var item in _dits)
+        {
+            if (SimMap.GetSpot(item.position) != Map.CellType.survive)
+            {
+                ditsToKill.Add(item);
+            }
+        }
+
+        foreach (var item in ditsToKill)
+        {
+            _dits.Remove(item);
+        }
     }
 
     public void SaveState()
