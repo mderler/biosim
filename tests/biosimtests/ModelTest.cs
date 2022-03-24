@@ -34,22 +34,18 @@ public class ModelTest
         Assert.Equal(connections.Length, connectionsCount);
         Assert.Equal(connectionsCount, model.ConnectionCount);
 
-        bool right = true;
         for (int i = 0; i < connections.Length-1; i++)
         {
-            right &= connections[i].src <= connections[i+1].src;
+            Assert.True(connections[i].src <= connections[i+1].src);
         }
-
-        Assert.True(right);
 
         foreach (var item in connections)
         {
-            right &= item.wht >= -4f && item.wht <= 4f;
-            right &= item.src < inputCount+innerCount;
-            right &= item.dst < innerCount+outputCount;
+            Assert.True(item.wht >= -4f && item.wht <= 4f);
+            Assert.True(item.src < inputCount+innerCount);
+            Assert.True(item.dst < inputCount+innerCount+outputCount);
+            Assert.True(item.dst > inputCount);
         }
-
-        Assert.True(right);
     }
 
     [Fact]
@@ -80,6 +76,24 @@ public class ModelTest
 
         Assert.Equal(model.ConnectionCount, connectionsCount);
         Assert.Equal(model.Connections.Length, connectionsCount);
+
+        var connections = model.Connections;
+
+        Assert.Equal(connections.Length, connectionsCount);
+        Assert.Equal(connectionsCount, model.ConnectionCount);
+
+        for (int i = 0; i < connections.Length-1; i++)
+        {
+            Assert.True(connections[i].src <= connections[i+1].src);
+        }
+
+        foreach (var item in connections)
+        {
+            Assert.True(item.wht >= -4f && item.wht <= 4f);
+            Assert.True(item.src < inputCount+innerCount);
+            Assert.True(item.dst < inputCount+innerCount+outputCount);
+            Assert.True(item.dst > inputCount);
+        }
     }
 
     [Fact]
@@ -103,8 +117,75 @@ public class ModelTest
         bool[] expected = {};
     }
 
+    [Fact]
     public void TestCleanModel()
     {
-        // TODO: Finish this test
+        (int, int, float, bool)[] connections = {
+            (0, 12, 1f, false),
+            (1, 16, 1f, false),
+            (1, 18, 1f, false),
+            (4, 18, 1f, false),
+            (8, 22, 1f, false),
+            (9, 26, 1f, false),
+            (10, 27, 1f, false),
+            (11, 38, 1f, false),
+            (13, 28, 1f, false),
+            (14, 29, 1f, false),
+            (14, 30, 1f, false),
+            (15, 29, 1f, false),
+            (16, 17, 1f, false),
+            (17, 18, 1f, false),
+            (19, 19, 1f, false),
+            (20, 22, 1f, false),
+            (20, 21, 1f, false),
+            (21, 22, 1f, false),
+            (22, 23, 1f, false),
+            (23, 23, 1f, false),
+            (23, 35, 1f, false),
+            (23, 24, 1f, false),
+            (24, 25, 1f, false),
+            (25, 36, 1f, false),
+            (25, 26, 1f, false),
+            (26, 36, 1f, false),
+            (27, 37, 1f, false)
+        };
+
+        bool[] expected = {
+            false,
+            false,
+            false,
+            false,
+            true,
+            true,
+            true,
+            true,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true
+        }; 
+
+        Model model = new Model();
+        model.Connections = connections;
+
+        for (int i = 0; i < model.ConnectionCount; i++)
+        {
+            Assert.Equal(model.Connections[i].act, expected[i]);
+        }
     }
 }
