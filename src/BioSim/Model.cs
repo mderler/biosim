@@ -2,36 +2,68 @@ namespace BioSim;
 
 public class Model
 {
-    private SimulationSettings _settings;
-    private int _inputCount;
-    private int _outputCount;
-    private (int src, int dst, float wht)[] _connections;
-    public (int src, int dst, float wht)[] Connections => _connections;
-
-    public Model(SimulationSettings settings)
+    public int InputCount { get; set; }
+    public int InnerCount { get; set; }
+    public int OutputCount { get; set; }
+    private int _connectionCount;
+    public float MutateChance { get; set; }
+    public float MutateStrength { get; set; }
+    private List<(int src, int dst, float wht, bool act)> _connections;
+    public Random RandomNumberGenerator { get; set; }
+    public (int src, int dst, float wht, bool act)[] Connections
     {
-        _settings = settings;
-        _inputCount = settings.inputFunctions.Length;
-        _connections = new (int, int, float)[_settings.connections];
+        get { return _connections.ToArray(); }
+        set 
+        {
+            _connections = new List<(int, int, float, bool)>(value);
+            _connectionCount = value.Length;
+            CleanModel();
+        }
+    }
+    public int ConnectionCount
+    {
+        get => _connectionCount;
+        set 
+        {
+            if (value < _connectionCount)
+            {
+                int count = _connectionCount - value;
+                for (int i = 0; i < count; i++)
+                {
+                    _connections.RemoveAt(RandomNumberGenerator.Next());
+                }
+            }
+
+            _connectionCount = value;
+        }
+    }
+
+    public Model()
+    {
+        RandomNumberGenerator = new Random();
+        _connectionCount = 0;
+        _connections = new List<(int, int, float, bool)>();
     }
 
     public bool[] GetOutput(float[] input)
     {
         bool[] output = new bool[0];
-        float[] tmp = new float[_settings.innerNeurons+_inputCount];
+        float[] tmp = new float[InnerCount+InputCount];
 
-        for (int i = 0; i < _connections.Length; i++)
+        for (int i = 0; i < _connections.Count; i++)
         {
-            if (_connections[i].src > _inputCount)
-                tmp[_connections[i].dst] += MathF.Tanh(tmp[_connections[i].src-_inputCount] * _connections[i].wht);
-            else
-                tmp[_connections[i].dst] += tmp[_connections[i].src] * _connections[i].wht;
+            if (_connections[i].act)
+            {
+                if (_connections[i].src > InputCount)
+                    tmp[_connections[i].dst] += MathF.Tanh(tmp[_connections[i].src-InputCount] * _connections[i].wht);
+                else
+                    tmp[_connections[i].dst] += tmp[_connections[i].src] * _connections[i].wht;
+            }
         }
 
-        Random rnd = new Random();
-        for (int i = 0; i < _outputCount; i++)
+        for (int i = 0; i < OutputCount; i++)
         {
-            output[i] = rnd.NextSingle() <= tmp[i+_settings.innerNeurons];
+            output[i] = 0f <= tmp[i+InnerCount];
         }
 
         return output;
@@ -39,63 +71,55 @@ public class Model
 
     public void Randomize()
     {
-        List<(int src, int dst, float wht)> tmp = new List<(int, int, float)>();
-        Random rnd = new Random();
-
-        for (int i = 0; i < _connections.Length; i++)
+        for (int i = 0; i < _connectionCount; i++)
         {
-            (int src, int dst, float wht) t = new (   
-                rnd.Next(_inputCount+_settings.innerNeurons),
-                rnd.Next(_settings.innerNeurons+_outputCount),
-                rnd.NextSingle()*8-4);
-            if (tmp.Count == 0 || tmp[tmp.Count-1].src < t.src)
-                tmp.Add(t);
+            (int src, int dst, float wht, bool) t = new (   
+                RandomNumberGenerator.Next(InputCount + InnerCount),
+                RandomNumberGenerator.Next(InputCount, InputCount+InnerCount+OutputCount),
+                RandomNumberGenerator.NextSingle()*8-4,
+                false);
+            if (_connections.Count == 0 || _connections[_connections.Count-1].src < t.src)
+                _connections.Add(t);
             else
             {
-                for (int j = 0; j < tmp.Count; j++)
+                for (int j = 0; j < _connections.Count; j++)
                 {
-                    if (tmp[j].src >= t.src)
+                    if (_connections[j].src >= t.src)
                     {
-                        tmp.Insert(j, t);
+                        _connections.Insert(j, t);
                         break;
                     }
                 }
             }
         }
 
-        _connections = tmp.ToArray();
+        CleanModel();
     }
 
     public void Mutate()
     {
-        Random rnd = new Random();
-
-        if (rnd.NextSingle() < _settings.mutateChance)
+        if (RandomNumberGenerator.NextSingle() < MutateChance)
         {
-            List<(int src, int dst, float wht)> tmp = new List<(int, int, float)>(_connections);
-
-            int changeAmount = (int)(_connections.Length * _settings.mutateStrength);
-            byte[] pickedFields = new byte[3];
+            int changeAmount = (int)(_connections.Count * MutateStrength);
 
             for (int i = 0; i < changeAmount; i++)
             {
-                rnd.NextBytes(pickedFields);
-                int index = rnd.Next(_connections.Length);
-                var change = tmp[index];
-                tmp.RemoveAt(index);
+                int index = RandomNumberGenerator.Next(_connections.Count);
+                var change = _connections[index];
+                _connections.RemoveAt(index);
                 
-                if (pickedFields[0] % 2 == 0)
+                if (RandomNumberGenerator.NextSingle() < MutateStrength)
                 {
-                    change.src = rnd.Next(_inputCount+_settings.innerNeurons);
-                    if (change.src > tmp[tmp.Count-1].src)
+                    change.src = RandomNumberGenerator.Next(InputCount+InnerCount);
+                    if (change.src > _connections[_connections.Count-1].src)
                     {
-                        tmp.Add(change);
+                        _connections.Add(change);
                     }
                     else
                     {
-                        for (int j = 0; j < tmp.Count; j++)
+                        for (int j = 0; j < _connections.Count; j++)
                         {
-                            if (change.src <= tmp[j].src)
+                            if (change.src <= _connections[j].src)
                             {
                                 index = j;
                                 break;
@@ -103,19 +127,84 @@ public class Model
                         }
                     }
                 }
-                if (pickedFields[1] % 2 == 0)
+                if (RandomNumberGenerator.NextSingle() < MutateStrength)
                 {
-                    change.dst = rnd.Next(_settings.innerNeurons+_outputCount);
+                    change.dst = RandomNumberGenerator.Next(InputCount, InputCount+InnerCount+OutputCount);
                 }
-                if (pickedFields[2] % 2 == 0)
+                if (RandomNumberGenerator.NextSingle() < MutateStrength)
                 {
-                    change.wht = rnd.NextSingle()*8-4;
+                    change.wht = RandomNumberGenerator.NextSingle()*8-4;
                 }
 
-                tmp.Insert(index, change);
+                change.act = false;
+
+                _connections.Insert(index, change);
             }
+        }
 
-            _connections = tmp.ToArray();
+        CleanModel();
+    }
+
+    // disable all connections that lead to nowhere
+    private void CleanModel()
+    {
+        List<int> inCon = new List<int>();
+        List<int> outCon = new List<int>();
+
+        List<int> intmp = new List<int>();
+        List<int> outtmp = new List<int>();
+        
+        bool changed;
+        do
+        {
+            changed = false;
+            for (int i = 0; i < _connectionCount; i++)
+            {
+                // check and add the connections that are directly or indirectly
+                // connected to the input
+                if (_connections[i].src < InputCount ||
+                    intmp.Contains(_connections[i].src))
+                {
+                    if (!inCon.Contains(i))
+                    {
+                        inCon.Add(i);
+                        changed = true;
+                    }
+                    if (!intmp.Contains(_connections[i].dst))
+                    {
+                        intmp.Add(_connections[i].dst);
+                        changed = true;
+                    }
+                }
+
+                // check and add the connections that are directly or indirectly
+                // connected to the output
+                if (_connections[i].dst >= InputCount+InnerCount ||
+                    outtmp.Contains(_connections[i].dst))
+                {
+                    if (!outCon.Contains(i))
+                    {
+                        outCon.Add(i);
+                        changed = true;
+                    }
+                    if (!outtmp.Contains(_connections[i].src))
+                    {
+                        outtmp.Add(_connections[i].src);
+                        changed = true;
+                    }
+                }
+            }
+        } while (changed);
+
+        // activate all connections that are connected to input and output
+        foreach (var index in inCon)
+        {
+            if (outCon.Contains(index))
+            {
+                var t = _connections[index];
+                t.act = true;
+                _connections[index] = t;
+            }
         }
     }
 }
