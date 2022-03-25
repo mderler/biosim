@@ -207,4 +207,21 @@ public class Model
             }
         }
     }
+
+    public Model Copy()
+    {
+        Model model = new Model
+        {
+            ConnectionCount = _connectionCount,
+            Connections = this.Connections,
+            InputCount = this.InputCount,
+            InnerCount = this.InnerCount,
+            OutputCount = this.OutputCount,
+            RandomNumberGenerator = this.RandomNumberGenerator,
+            MutateChance = this.MutateChance,
+            MutateStrength = this.MutateStrength
+        };
+
+        return model;
+    }
 }

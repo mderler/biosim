@@ -12,7 +12,7 @@ public class Map
         dit = 3
     }
 
-    // TODO: Make a config file contaning interpetrations + add dit
+    // TODO: Make a config file contaning interpetrations
     private readonly (byte r, byte g, byte b, byte c)[] _defaultMappings =
     {
         (255, 255, 255, 0),
@@ -66,6 +66,11 @@ public class Map
             int bestScore = int.MaxValue;
             foreach (var item in _defaultMappings)
             {
+                if (item.c == (byte)CellType.dit)
+                {
+                    continue;
+                }
+
                 int score = 0;
                 score += Math.Abs(item.r-data[i]);
                 score += Math.Abs(item.g-data[i+1]);
@@ -88,5 +93,29 @@ public class Map
     public CellType GetSpot((int x, int y) position)
     {
         return _mapData[position.y][position.x];
+    }
+
+    public void SetSpot((int x, int y) position, CellType cellType)
+    {
+        _mapData[position.y][position.x] = cellType;
+    }
+
+    public int FreeSpaceCount
+    {
+        get
+        {
+            int count = 0;
+            foreach (var row in _mapData)
+            {
+                foreach (var item in row)
+                {
+                    if (item == CellType.space)
+                    {
+                        count++;
+                    }
+                }
+            }
+            return count;
+        }
     }
 }

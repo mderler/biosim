@@ -5,16 +5,45 @@ public class Simulation
     public Map? SimMap { get; set; }
     public int Generations { get; set; }
     public int Steps { get; set; }
+    public int InitialPopulation { get; set; }
     public InputFunction[]? InputFunctions { get; set; }
     public OutputFunction[]? OutputFunctions { get; set; }
+    public int BirthAmount { get; set; }
+    public float BirthStrength { get; set; }
+    public Random RandomNumberGenerator { get; set; }
+    public Model? ModelTemplate { get; set; }
     private List<Dit> _dits = new List<Dit>();
 
     private int _currentStep = 0;
     private int _currentGeneration = 0;
 
+    public Simulation()
+    {
+        RandomNumberGenerator = new Random();
+        BirthAmount = 2;
+        BirthStrength = 0.5f;
+    }
+
     public void Setup()
     {
-        
+        if (SimMap == null || InputFunctions == null || OutputFunctions == null || ModelTemplate == null)
+        {
+            throw new Exception("Fields of the simulation must not equal null.");
+        }
+
+        int actualDitCount = Math.Min(InitialPopulation, SimMap.FreeSpaceCount);
+        for (int i = 0; i < actualDitCount; i++)
+        {
+            (int, int) pos = (
+                RandomNumberGenerator.Next(SimMap.Width),
+                RandomNumberGenerator.Next(SimMap.Width)
+            );
+            Model model = ModelTemplate.Copy();
+            model.Randomize();
+
+            Dit dit = new Dit(pos, model);
+            _dits.Add(dit);
+        }
     }
 
     public bool Update()
@@ -69,18 +98,13 @@ public class Simulation
             throw new Exception("SimMap must not be null.");
         }
 
-        List<Dit> ditsToKill = new List<Dit>();
+        // keep dits that survived
+        _dits = _dits.FindAll((Dit dit) => SimMap.GetSpot(dit.position) == Map.CellType.survive);
+
+        List<Dit> bornDits = new List<Dit>();
         foreach (var item in _dits)
         {
-            if (SimMap.GetSpot(item.position) != Map.CellType.survive)
-            {
-                ditsToKill.Add(item);
-            }
-        }
 
-        foreach (var item in ditsToKill)
-        {
-            _dits.Remove(item);
         }
     }
 
