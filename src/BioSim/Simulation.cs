@@ -2,17 +2,27 @@ namespace BioSim;
 
 public class Simulation
 {
-    public Map? SimMap { get; set; }
+    private Map? _simMap;
+    public Map? SimMap 
+    {
+        get => _simMap;
+        set
+        {
+            _simMap = value;
+            _simEnv = new SimulationEnviroment(value);
+        }
+    }
     public int Generations { get; set; }
     public int Steps { get; set; }
     public int InitialPopulation { get; set; }
     public InputFunction[]? InputFunctions { get; set; }
     public OutputFunction[]? OutputFunctions { get; set; }
-    public int BirthAmount { get; set; }
-    public float BirthStrength { get; set; }
+    public int MinBirthAmount { get; set; }
+    public int MaxBirthAmount { get; set; }
     public Random RandomNumberGenerator { get; set; }
     public Model? ModelTemplate { get; set; }
     private List<Dit> _dits = new List<Dit>();
+    private SimulationEnviroment? _simEnv;
 
     private int _currentStep = 0;
     private int _currentGeneration = 0;
@@ -20,8 +30,8 @@ public class Simulation
     public Simulation()
     {
         RandomNumberGenerator = new Random();
-        BirthAmount = 2;
-        BirthStrength = 0.5f;
+        MinBirthAmount = 1;
+        MaxBirthAmount = 2;
     }
 
     public void Setup()
@@ -97,9 +107,6 @@ public class Simulation
         {
             throw new Exception("SimMap must not be null.");
         }
-
-        // keep dits that survived
-        _dits = _dits.FindAll((Dit dit) => SimMap.GetSpot(dit.position) == Map.CellType.survive);
 
         List<Dit> bornDits = new List<Dit>();
         foreach (var item in _dits)

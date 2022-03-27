@@ -10,6 +10,6 @@ public static class OutputFunctions
 {
     public static void SetDitPositionToZeroTest(in Dit dit, Simulation simulation)
     {
-        dit.position = (0 , 0);
+
     }
 }

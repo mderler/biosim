@@ -8,8 +8,7 @@ public class Map
     {
         space = 0,
         survive = 1,
-        wall = 2,
-        dit = 3
+        wall = 2
     }
 
     // TODO: Make a config file contaning interpetrations
@@ -66,11 +65,6 @@ public class Map
             int bestScore = int.MaxValue;
             foreach (var item in _defaultMappings)
             {
-                if (item.c == (byte)CellType.dit)
-                {
-                    continue;
-                }
-
                 int score = 0;
                 score += Math.Abs(item.r-data[i]);
                 score += Math.Abs(item.g-data[i+1]);
