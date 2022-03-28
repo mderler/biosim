@@ -1,7 +1,5 @@
 using Xunit;
 using BioSim;
-using System.IO;
-using System;
 
 namespace biosimtests;
 
@@ -12,7 +10,13 @@ public class SimulationTest
     [Fact]
     public void TestConstuct()
     {
-        Simulation simulation = new Simulation();
+        Simulation simulation = new Simulation
+        (
+            new Model(),
+            new InputFunction[0],
+            new OutputFunction[0],
+            new Map(_mapImagePath)
+        );
     }
 
     [Fact]
@@ -24,11 +28,14 @@ public class SimulationTest
         const int generations = 50;
         const int steps = 20;
 
-        Simulation simulation = new Simulation()
+        Simulation simulation = new Simulation
+        (
+            new Model(),
+            new InputFunction[0],
+            new OutputFunction[0],
+            new Map(_mapImagePath)
+        )
         {
-            SimMap = new Map(_mapImagePath),
-            InputFunctions = new InputFunction[0],
-            OutputFunctions = new OutputFunction[0],
             Generations = generations,
             Steps = steps
         };

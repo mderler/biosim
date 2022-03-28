@@ -44,7 +44,7 @@ public class ModelTest
             Assert.True(item.wht >= -4f && item.wht <= 4f);
             Assert.True(item.src < inputCount+innerCount);
             Assert.True(item.dst < inputCount+innerCount+outputCount);
-            Assert.True(item.dst > inputCount);
+            Assert.True(item.dst >= inputCount);
         }
     }
 

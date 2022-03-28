@@ -113,7 +113,7 @@ public class Model
                     change.src = RandomNumberGenerator.Next(InputCount+InnerCount);
                     if (change.src > _connections[_connections.Count-1].src)
                     {
-                        _connections.Add(change);
+                        index = _connections.Count;
                     }
                     else
                     {

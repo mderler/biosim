@@ -67,11 +67,11 @@ class SimulationEnviroment
         // increment to overcome the problem of the number generator where the upper end ist exluded.
         maxBirthAmount++;
         bool running = true;
-        do
+        while (oldDits.Count != 0 && running)
         {
             int amount = RandomNumberGenerator.Next(minBirthAmount, maxBirthAmount);
             int index = RandomNumberGenerator.Next(oldDits.Count);
             running = TryAddRandomDits(amount,oldDits[index].model, true);
-        } while (oldDits.Count != 0 && running);
+        }
     }
 }

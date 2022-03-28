@@ -2,45 +2,48 @@ namespace BioSim;
 
 public class Simulation
 {
-    private Map? _simMap;
-    public Map? SimMap 
+    private Map _simMap;
+    public Map SimMap 
     {
         get => _simMap;
         set
         {
             _simMap = value;
-            _simEnv = new SimulationEnviroment(value);
+            _simEnv.SimMap = value;
         }
     }
     public int Generations { get; set; }
     public int Steps { get; set; }
     public int InitialPopulation { get; set; }
-    public InputFunction[]? InputFunctions { get; set; }
-    public OutputFunction[]? OutputFunctions { get; set; }
+    public InputFunction[] InputFunctions { get; set; }
+    public OutputFunction[] OutputFunctions { get; set; }
     public int MinBirthAmount { get; set; }
     public int MaxBirthAmount { get; set; }
     public Random RandomNumberGenerator { get; set; }
-    public Model? ModelTemplate { get; set; }
+    public Model ModelTemplate { get; set; }
     private List<Dit> _dits = new List<Dit>();
-    private SimulationEnviroment? _simEnv;
+    private SimulationEnviroment _simEnv;
 
     private int _currentStep = 0;
     private int _currentGeneration = 0;
 
-    public Simulation()
+    public Simulation(Model modelTemplate,
+                      InputFunction[] inputFunctions,
+                      OutputFunction[] outputFunctions,
+                      Map simMap)
     {
         RandomNumberGenerator = new Random();
         MinBirthAmount = 1;
         MaxBirthAmount = 2;
+        ModelTemplate = modelTemplate;
+        InputFunctions = inputFunctions;
+        OutputFunctions = outputFunctions;
+        _simMap = simMap;
+        _simEnv = new SimulationEnviroment(_simMap);
     }
 
     public void Setup()
     {
-        if (SimMap == null || InputFunctions == null || OutputFunctions == null || ModelTemplate == null)
-        {
-            throw new Exception("Fields of the simulation must not equal null.");
-        }
-
         int actualDitCount = Math.Min(InitialPopulation, SimMap.FreeSpaceCount);
         for (int i = 0; i < actualDitCount; i++)
         {
@@ -62,11 +65,12 @@ public class Simulation
         {
             return false;
         }
-
-        DoStep();
-        _currentStep++;
-
-        if (_currentStep >= Steps-1)
+        if (_currentStep < Steps)
+        {
+            DoStep();
+            _currentStep++;
+        }
+        if (_currentStep >= Steps)
         {
             DoGeneration();
             _currentStep = 0;
@@ -78,11 +82,6 @@ public class Simulation
 
     private void DoStep()
     {
-        if (SimMap == null || InputFunctions == null || OutputFunctions == null)
-        {
-            throw new Exception("Fields of the simulation must not equal null.");
-        }
-
         float[] inputs = new float[InputFunctions.Length];
         foreach (var dit in _dits)
         {
@@ -103,16 +102,7 @@ public class Simulation
 
     private void DoGeneration()
     {
-        if (SimMap == null)
-        {
-            throw new Exception("SimMap must not be null.");
-        }
-
-        List<Dit> bornDits = new List<Dit>();
-        foreach (var item in _dits)
-        {
-
-        }
+        _simEnv.KillAndCreateDits(MinBirthAmount, MaxBirthAmount);
     }
 
     public void SaveState()
