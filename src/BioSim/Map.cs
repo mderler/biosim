@@ -112,4 +112,28 @@ public class Map
             return count;
         }
     }
+
+    public byte[] ReadData()
+    {
+        int len = Width*Height;
+        byte[] data = new byte[len*3];
+
+        for (int i = 0; i < len; i++)
+        {
+            CellType cell = _mapData[i/Width][i%Width];
+            foreach (var item in _defaultMappings)
+            {
+                if (item.c == (byte)cell)
+                {
+                    int j = i*3;
+                    data[j] = item.r;
+                    data[j+1] = item.g;
+                    data[j+2] = item.b;
+                    break;
+                }
+            }
+        }
+
+        return data;
+    }
 }

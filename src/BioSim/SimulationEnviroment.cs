@@ -1,16 +1,16 @@
 namespace BioSim;
 
-class SimulationEnviroment
+public class SimulationEnviroment
 { 
     public Map SimMap { get; set; }
     public Random RandomNumberGenerator { get; set; }
-    private List<Dit> _dits;
+    public List<Dit> Dits { get; private set; }
 
     public SimulationEnviroment(Map simMap)
     {
         RandomNumberGenerator = new Random();
         SimMap = simMap;
-        _dits = new List<Dit>();
+        Dits = new List<Dit>();
     }
 
 
@@ -42,6 +42,7 @@ class SimulationEnviroment
                 cModel.Mutate();
             }
             Dit dit = new Dit(validPositions[index], cModel);
+            Dits.Add(dit);
             validPositions.RemoveAt(index);
         }
 
@@ -61,8 +62,8 @@ class SimulationEnviroment
 
     public void KillAndCreateDits(int minBirthAmount, int maxBirthAmount)
     {
-        List<Dit> oldDits = _dits.FindAll((Dit dit) => SimMap.GetSpot(dit.position) == Map.CellType.survive);
-        _dits.Clear();
+        List<Dit> oldDits = Dits.FindAll((Dit dit) => SimMap.GetSpot(dit.position) == Map.CellType.survive);
+        Dits.Clear();
 
         // increment to overcome the problem of the number generator where the upper end ist exluded.
         maxBirthAmount++;
@@ -73,5 +74,20 @@ class SimulationEnviroment
             int index = RandomNumberGenerator.Next(oldDits.Count);
             running = TryAddRandomDits(amount,oldDits[index].model, true);
         }
+    }
+
+    public byte[] ReadData()
+    {
+        byte[] data = SimMap.ReadData();
+
+        foreach (var item in Dits)
+        {
+            int index = (item.position.x+item.position.y*SimMap.Width)*3;
+            data[index] = 255;
+            data[index+1] = 0;
+            data[index+2] = 0;
+        }
+
+        return data;
     }
 }

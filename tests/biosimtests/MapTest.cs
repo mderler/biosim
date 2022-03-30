@@ -111,9 +111,26 @@ public class MapTest
     {
         void CreateMap()
         {
-            new Map("");
+          new Map("");
         }
 
         Assert.ThrowsAny<Exception>(CreateMap);
+    }
+
+    [Fact]
+    public void TestReadData()
+    {
+        byte[] data = 
+        {
+            255,255,255,
+              0,255,  0,
+             20, 20, 20
+        };
+
+        TestDirHelper.CreateTestImage(data, 1, _imageDir);
+        Map map = new Map(_imageDir);
+        var actual = map.ReadData();
+
+        Assert.Equal(data, actual);
     }
 }

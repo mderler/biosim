@@ -9,7 +9,7 @@ public class Simulation
         set
         {
             _simMap = value;
-            _simEnv.SimMap = value;
+            SimEnv.SimMap = value;
         }
     }
     public int Generations { get; set; }
@@ -21,8 +21,7 @@ public class Simulation
     public int MaxBirthAmount { get; set; }
     public Random RandomNumberGenerator { get; set; }
     public Model ModelTemplate { get; set; }
-    private List<Dit> _dits = new List<Dit>();
-    private SimulationEnviroment _simEnv;
+    public SimulationEnviroment SimEnv { get; private set; }
 
     private int _currentStep = 0;
     private int _currentGeneration = 0;
@@ -39,24 +38,12 @@ public class Simulation
         InputFunctions = inputFunctions;
         OutputFunctions = outputFunctions;
         _simMap = simMap;
-        _simEnv = new SimulationEnviroment(_simMap);
+        SimEnv = new SimulationEnviroment(_simMap);
     }
 
     public void Setup()
     {
-        int actualDitCount = Math.Min(InitialPopulation, SimMap.FreeSpaceCount);
-        for (int i = 0; i < actualDitCount; i++)
-        {
-            (int, int) pos = (
-                RandomNumberGenerator.Next(SimMap.Width),
-                RandomNumberGenerator.Next(SimMap.Width)
-            );
-            Model model = ModelTemplate.Copy();
-            model.Randomize();
-
-            Dit dit = new Dit(pos, model);
-            _dits.Add(dit);
-        }
+        SimEnv.TryAddRandomDits(InitialPopulation, ModelTemplate);
     }
 
     public bool Update()
@@ -83,7 +70,7 @@ public class Simulation
     private void DoStep()
     {
         float[] inputs = new float[InputFunctions.Length];
-        foreach (var dit in _dits)
+        foreach (var dit in SimEnv.Dits)
         {
             for (int i = 0; i < inputs.Length; i++)
             {
@@ -102,7 +89,7 @@ public class Simulation
 
     private void DoGeneration()
     {
-        _simEnv.KillAndCreateDits(MinBirthAmount, MaxBirthAmount);
+        SimEnv.KillAndCreateDits(MinBirthAmount, MaxBirthAmount);
     }
 
     public void SaveState()
