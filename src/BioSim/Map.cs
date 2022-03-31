@@ -89,11 +89,6 @@ public class Map
         return _mapData[position.y][position.x];
     }
 
-    public void SetSpot((int x, int y) position, CellType cellType)
-    {
-        _mapData[position.y][position.x] = cellType;
-    }
-
     public int FreeSpaceCount
     {
         get

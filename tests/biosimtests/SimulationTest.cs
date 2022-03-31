@@ -53,10 +53,10 @@ public class SimulationTest
     [Fact]
     public void TestFirstSim()
     {
-        const string path = "C:/Users/Matthias/Desktop/BioSimMaps/simImg1Test.png";
-        if (!Directory.Exists(path))
+        const string path = "../tmp/firstsim.png";
+        if (!File.Exists(path))
         {
-            //return;
+            return;
         }
 
         Model model = new Model();
@@ -65,19 +65,24 @@ public class SimulationTest
 
         Simulation simulation = new Simulation(model, new InputFunction[0], new OutputFunction[0], simMap);
         simulation.InitialPopulation = 50;
-        simulation.Generations = 10;
-        simulation.Steps = 20;
+        simulation.Generations = 20;
+        simulation.Steps = 10;
 
         simulation.Setup();
 
         MagickImageCollection collection = new MagickImageCollection();
+        MagickReadSettings mrs = new MagickReadSettings();
+        mrs.Format = MagickFormat.Rgb;
+        mrs.Width = 50;
+        mrs.Height = 50;
+
         int counter = 0;
         while (simulation.Update())
         {
-            collection.Add(new MagickImage(simulation.SimEnv.ReadData()));
-            collection[counter].AnimationDelay = 100;
+            collection.Add(new MagickImage(simulation.SimEnv.ReadData(), mrs));
+            collection[counter].AnimationDelay = 200;
             counter++;
         }
-        collection.Write("../tmp/firstSim.gif");
+        collection.Write("../tmp/firstsim.gif", MagickFormat.Gif);
     }
 }
