@@ -35,6 +35,16 @@ public class Map
         Interpetrate(image);
     }
 
+    public Map(MagickImage image)
+    {
+        Width = image.Width;
+        Height = image.Height;
+
+        _mapData = new CellType[Height][];
+
+        Interpetrate(image);
+    }
+
     // TODO: finish this method
     public void ReadMapping(string path)
     {

@@ -19,7 +19,25 @@ public class Simulation
     public OutputFunction[] OutputFunctions { get; set; }
     public int MinBirthAmount { get; set; }
     public int MaxBirthAmount { get; set; }
-    public Random RandomNumberGenerator { get; set; }
+    private Random? _rnd;
+    public Random RandomNumberGenerator
+    {
+        get
+        {
+            if (_rnd == null)
+            {
+                _rnd = new Random();
+            }
+
+            return _rnd;
+        }
+        set 
+        {
+            _rnd = value;
+            SimEnv.RandomNumberGenerator = value;
+            ModelTemplate.RandomNumberGenerator = value;
+        }
+    }
     public Model ModelTemplate { get; set; }
     public SimulationEnviroment SimEnv { get; private set; }
 
@@ -31,7 +49,6 @@ public class Simulation
                       OutputFunction[] outputFunctions,
                       Map simMap)
     {
-        RandomNumberGenerator = new Random();
         MinBirthAmount = 1;
         MaxBirthAmount = 2;
         ModelTemplate = modelTemplate;
@@ -60,6 +77,10 @@ public class Simulation
         if (_currentStep >= Steps)
         {
             DoGeneration();
+            if (SimEnv.Dits.Count == 0)
+            {
+                return false;
+            }
             _currentStep = 0;
             _currentGeneration++;
         }

@@ -9,7 +9,21 @@ public class Model
     public float MutateChance { get; set; }
     public float MutateStrength { get; set; }
     private List<(int src, int dst, float wht, bool act)> _connections;
-    public Random RandomNumberGenerator { get; set; }
+    private Random? _rnd;
+    public Random RandomNumberGenerator
+    {
+        get 
+        {
+            if (_rnd == null)
+            {
+                _rnd = new Random();
+            }
+
+            return _rnd;
+        }
+        set { _rnd = value; }
+    }
+
     public (int src, int dst, float wht, bool act)[] Connections
     {
         get { return _connections.ToArray(); }
@@ -20,6 +34,7 @@ public class Model
             CleanModel();
         }
     }
+
     public int ConnectionCount
     {
         get => _connectionCount;
@@ -40,7 +55,6 @@ public class Model
 
     public Model()
     {
-        RandomNumberGenerator = new Random();
         _connectionCount = 0;
         _connections = new List<(int, int, float, bool)>();
     }

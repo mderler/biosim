@@ -3,18 +3,31 @@ namespace BioSim;
 public class SimulationEnviroment
 { 
     public Map SimMap { get; set; }
-    public Random RandomNumberGenerator { get; set; }
     public List<Dit> Dits { get; private set; }
+    private Random? _rnd;
+
+    public Random RandomNumberGenerator
+    {
+        get
+        {
+            if (_rnd == null)
+            {
+                _rnd = new Random();
+            }
+
+            return _rnd;
+        }
+        set { _rnd = value; }
+    }
 
     public SimulationEnviroment(Map simMap)
     {
-        RandomNumberGenerator = new Random();
         SimMap = simMap;
         Dits = new List<Dit>();
     }
 
 
-    public bool TryAddRandomDits(int amount, Model model, bool mutate=false)
+    public bool TryAddRandomDits(int amount, Model model)
     {
         List<(int, int)> validPositions = new List<(int, int)>();
         for (int y = 0; y < SimMap.Height; y++)
@@ -37,13 +50,53 @@ public class SimulationEnviroment
 
             Model cModel = model.Copy();
             cModel.Randomize();
-            if (mutate)
-            {
-                cModel.Mutate();
-            }
+
             Dit dit = new Dit(validPositions[index], cModel);
             Dits.Add(dit);
             validPositions.RemoveAt(index);
+        }
+
+        return empty;
+    }
+
+    public bool TryAddRandomDits(List<(int amount, Model model)> toAdd)
+    {
+        List<(int, int)> validPositions = new List<(int, int)>();
+        for (int y = 0; y < SimMap.Height; y++)
+        {
+            for (int x = 0; x < SimMap.Width; x++)
+            {
+                Map.CellType cell = SimMap.GetSpot(x, y);
+                if (cell == Map.CellType.survive || cell == Map.CellType.space)
+                {
+                    validPositions.Add((x, y));
+                }
+            }
+        }
+
+        bool empty = false;
+        foreach (var item in toAdd)
+        {
+            int count = Math.Min(item.amount, validPositions.Count);
+            empty = count == validPositions.Count;
+            for (int i = 0; i < count; i++)
+            {
+                int index = RandomNumberGenerator.Next(validPositions.Count);
+    
+                Model cModel = item.model.Copy();
+                cModel.Randomize();
+                cModel.Mutate();
+
+                Dit dit = new Dit(validPositions[index], cModel);
+                Dits.Add(dit);
+
+                validPositions.RemoveAt(index);
+            }
+
+            if (empty)
+            {
+                break;
+            }
         }
 
         return empty;
@@ -63,17 +116,17 @@ public class SimulationEnviroment
     public void KillAndCreateDits(int minBirthAmount, int maxBirthAmount)
     {
         List<Dit> oldDits = Dits.FindAll((Dit dit) => SimMap.GetSpot(dit.position) == Map.CellType.survive);
+        List<(int, Model)> toAdd = new List<(int, Model)>();
         Dits.Clear();
 
-        // increment to overcome the problem of the number generator where the upper end ist exluded.
-        maxBirthAmount++;
-        bool running = true;
-        while (oldDits.Count != 0 && running)
+        while (oldDits.Count != 0)
         {
-            int amount = RandomNumberGenerator.Next(minBirthAmount, maxBirthAmount);
+            int amount = RandomNumberGenerator.Next(minBirthAmount, maxBirthAmount+1);
             int index = RandomNumberGenerator.Next(oldDits.Count);
-            running = TryAddRandomDits(amount,oldDits[index].model, true);
+            toAdd.Add((amount, oldDits[index].model));
+            oldDits.RemoveAt(index);
         }
+        TryAddRandomDits(toAdd);
     }
 
     public byte[] ReadData()

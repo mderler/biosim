@@ -1,5 +1,6 @@
 using Xunit;
 using BioSim;
+using System;
 using System.IO;
 using ImageMagick;
 
@@ -51,38 +52,44 @@ public class SimulationTest
     }
 
     [Fact]
-    public void TestFirstSim()
+    public void TestWholeSim()
     {
-        const string path = "../tmp/firstsim.png";
+        const string path = "../tmp/secondsim.png";
         if (!File.Exists(path))
         {
             return;
         }
+
+        MagickImage image = new MagickImage(path);
 
         Model model = new Model();
         model.InnerCount = 2;
         Map simMap = new Map(path);
 
         Simulation simulation = new Simulation(model, new InputFunction[0], new OutputFunction[0], simMap);
-        simulation.InitialPopulation = 50;
+        simulation.InitialPopulation = 200;
         simulation.Generations = 20;
         simulation.Steps = 10;
+        simulation.MinBirthAmount = 0;
+        simulation.MaxBirthAmount = 2;
+        simulation.RandomNumberGenerator = new Random(0);
 
         simulation.Setup();
 
         MagickImageCollection collection = new MagickImageCollection();
         MagickReadSettings mrs = new MagickReadSettings();
         mrs.Format = MagickFormat.Rgb;
-        mrs.Width = 50;
-        mrs.Height = 50;
+        mrs.Width = image.Width;
+        mrs.Height = image.Height;
 
         int counter = 0;
         while (simulation.Update())
         {
             collection.Add(new MagickImage(simulation.SimEnv.ReadData(), mrs));
-            collection[counter].AnimationDelay = 200;
+            collection[counter].AnimationDelay = 20;
             counter++;
         }
-        collection.Write("../tmp/firstsim.gif", MagickFormat.Gif);
+
+        collection.Write("../tmp/firstsim.gif");
     }
 }
