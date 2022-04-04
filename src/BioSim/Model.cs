@@ -45,7 +45,7 @@ public class Model
                 int count = _connectionCount - value;
                 for (int i = 0; i < count; i++)
                 {
-                    _connections.RemoveAt(RandomNumberGenerator.Next());
+                    _connections.RemoveAt(RandomNumberGenerator.Next(_connections.Count));
                 }
             }
 
@@ -61,17 +61,17 @@ public class Model
 
     public bool[] GetOutput(float[] input)
     {
-        bool[] output = new bool[0];
-        float[] tmp = new float[InnerCount+InputCount];
+        bool[] output = new bool[OutputCount];
+        float[] tmp = new float[InnerCount+OutputCount];
 
         for (int i = 0; i < _connections.Count; i++)
         {
             if (_connections[i].act)
             {
-                if (_connections[i].src > InputCount)
-                    tmp[_connections[i].dst] += MathF.Tanh(tmp[_connections[i].src-InputCount] * _connections[i].wht);
+                if (_connections[i].src >= InputCount)
+                    tmp[_connections[i].dst-InputCount] += MathF.Tanh(tmp[_connections[i].src-InputCount] * _connections[i].wht);
                 else
-                    tmp[_connections[i].dst] += tmp[_connections[i].src] * _connections[i].wht;
+                    tmp[_connections[i].dst-InputCount] += input[_connections[i].src] * _connections[i].wht;
             }
         }
 
@@ -226,7 +226,6 @@ public class Model
     {
         Model model = new Model
         {
-            ConnectionCount = _connectionCount,
             Connections = this.Connections,
             InputCount = this.InputCount,
             InnerCount = this.InnerCount,
@@ -235,6 +234,8 @@ public class Model
             MutateChance = this.MutateChance,
             MutateStrength = this.MutateStrength
         };
+
+        model.ConnectionCount = this._connectionCount;
 
         return model;
     }

@@ -20,6 +20,7 @@ public class Map
     };
 
     private CellType[][] _mapData;
+    public byte[] RawData { get; }
 
     public int Width { get; private set; }
     public int Height { get; private set; }
@@ -31,6 +32,7 @@ public class Map
         Height = image.Height;
 
         _mapData = new CellType[Height][];
+        RawData = new byte[Width*Height*3];
 
         Interpetrate(image);
     }
@@ -41,6 +43,7 @@ public class Map
         Height = image.Height;
 
         _mapData = new CellType[Height][];
+        RawData = new byte[Width*Height*3];
 
         Interpetrate(image);
     }
@@ -83,6 +86,11 @@ public class Map
                 if (score <= bestScore)
                 {
                     _mapData[y][x] = (CellType)item.c;
+
+                    RawData[i] = item.r;
+                    RawData[i+1] = item.g;
+                    RawData[i+2] = item.b;
+
                     bestScore = score;
                 }
             }
@@ -116,29 +124,5 @@ public class Map
             }
             return count;
         }
-    }
-
-    public byte[] ReadData()
-    {
-        int len = Width*Height;
-        byte[] data = new byte[len*3];
-
-        for (int i = 0; i < len; i++)
-        {
-            CellType cell = _mapData[i/Width][i%Width];
-            foreach (var item in _defaultMappings)
-            {
-                if (item.c == (byte)cell)
-                {
-                    int j = i*3;
-                    data[j] = item.r;
-                    data[j+1] = item.g;
-                    data[j+2] = item.b;
-                    break;
-                }
-            }
-        }
-
-        return data;
     }
 }

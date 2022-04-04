@@ -8,7 +8,7 @@ namespace biosimtests;
 
 public class SimulationTest
 {
-    private const string _mapImagePath = "../tmp/mapImgage.png";
+    private const string _mapImagefn = "../../../tmp/mapImgage.png";
 
     [Fact]
     public void TestConstuct()
@@ -18,7 +18,7 @@ public class SimulationTest
             new Model(),
             new InputFunction[0],
             new OutputFunction[0],
-            new Map(_mapImagePath)
+            new Map(_mapImagefn)
         );
     }
 
@@ -26,7 +26,7 @@ public class SimulationTest
     public void TestUpdate()
     {
         byte[] data = {0, 0, 0};
-        TestDirHelper.CreateTestImage(data, 1, _mapImagePath);
+        TestDirHelper.CreateTestImage(data, 1, _mapImagefn);
 
         const int generations = 50;
         const int steps = 20;
@@ -36,7 +36,7 @@ public class SimulationTest
             new Model(),
             new InputFunction[0],
             new OutputFunction[0],
-            new Map(_mapImagePath)
+            new Map(_mapImagefn)
         )
         {
             Generations = generations,
@@ -54,7 +54,7 @@ public class SimulationTest
     [Fact]
     public void TestWholeSim()
     {
-        const string path = "../tmp/secondsim.png";
+        const string path = "../../../../../res/testres/small.png";
         if (!File.Exists(path))
         {
             return;
@@ -62,16 +62,27 @@ public class SimulationTest
 
         MagickImage image = new MagickImage(path);
 
+        const int connectionCount = 8;
+
         Model model = new Model();
+        model.InputCount = 2;
         model.InnerCount = 2;
+        model.OutputCount = 4;
+        model.ConnectionCount = connectionCount;
+        model.MutateChance = 0.01f;
+        model.MutateStrength = 0.5f;
         Map simMap = new Map(path);
 
-        Simulation simulation = new Simulation(model, new InputFunction[0], new OutputFunction[0], simMap);
-        simulation.InitialPopulation = 200;
-        simulation.Generations = 20;
-        simulation.Steps = 10;
-        simulation.MinBirthAmount = 0;
-        simulation.MaxBirthAmount = 2;
+        InputFunction[] inputFunctions = {InputFunctions.NearToEast, InputFunctions.NearToSouth};
+        OutputFunction[] outputFunctions = {OutputFunctions.MoveNorth, OutputFunctions.MoveSouth,
+                                            OutputFunctions.MoveWest, OutputFunctions.MoveEast};
+
+        Simulation simulation = new Simulation(model, inputFunctions, outputFunctions, simMap);
+        simulation.InitialPopulation = 5;
+        simulation.Generations = 200;
+        simulation.Steps = 50;
+        simulation.MinBirthAmount = 2;
+        simulation.MaxBirthAmount = 4;
         simulation.RandomNumberGenerator = new Random(0);
 
         simulation.Setup();
@@ -82,14 +93,22 @@ public class SimulationTest
         mrs.Width = image.Width;
         mrs.Height = image.Height;
 
+        int ditsCount = simulation.SimEnv.Dits.Count;
+        for (int i = 0; i < ditsCount; i++)
+        {
+            Assert.Equal(simulation.SimEnv.Dits[i].model.ConnectionCount, connectionCount);
+        }
+
         int counter = 0;
         while (simulation.Update())
         {
-            collection.Add(new MagickImage(simulation.SimEnv.ReadData(), mrs));
-            collection[counter].AnimationDelay = 20;
+            MagickImage frame = new MagickImage(simulation.SimEnv.ReadData(), mrs);
+            frame.Write($"../../../../../tmp/imgs/frame{counter}.png");
+            collection.Add(frame);
+            collection[counter].AnimationDelay = 10;
             counter++;
         }
 
-        collection.Write("../tmp/firstsim.gif");
+        collection.Write("../../../../../tmp/firstsim.gif", MagickFormat.Gif);
     }
 }

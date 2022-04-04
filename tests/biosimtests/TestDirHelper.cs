@@ -4,9 +4,9 @@ using ImageMagick;
 
 static class TestDirHelper
 {
-    public static void CreateTestImage(byte[] data, int width, string dir)
+    public static void CreateTestImage(byte[] data, int width, string filename)
     {
-        string? currentDir = Path.GetDirectoryName(dir);
+        string? currentDir = Path.GetDirectoryName(filename);
         if (currentDir == null)
         {
             throw new Exception("Directory must not be null");
@@ -20,6 +20,6 @@ static class TestDirHelper
         mrs.Width = width;
         mrs.Height = data.Length/3/width;
         MagickImage mImage = new MagickImage(data, mrs);
-        mImage.Write(dir, MagickFormat.Png);
+        mImage.Write(filename, MagickFormat.Png);
     }
 }

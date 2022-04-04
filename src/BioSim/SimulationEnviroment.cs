@@ -104,11 +104,23 @@ public class SimulationEnviroment
 
     public bool TryMove(Dit dit, (int x, int y) newPosition)
     {
-        Map.CellType cell = SimMap.GetSpot(newPosition);
-        if (cell == Map.CellType.survive || cell == Map.CellType.space)
+        if (newPosition.x >= 0 && newPosition.x < SimMap.Width &&
+            newPosition.y >= 0 && newPosition.y < SimMap.Height)
         {
-            dit.position = newPosition;
-            return true;
+            foreach (var item in Dits)
+            {
+                if (item.position == newPosition)
+                {
+                    return false;
+                }
+            }
+
+            Map.CellType cell = SimMap.GetSpot(newPosition);
+            if ((cell == Map.CellType.survive || cell == Map.CellType.space))
+            {
+                dit.position = newPosition;
+                return true;
+            }
         }
         return false;
     }
@@ -131,7 +143,7 @@ public class SimulationEnviroment
 
     public byte[] ReadData()
     {
-        byte[] data = SimMap.ReadData();
+        byte[] data = SimMap.RawData;
 
         foreach (var item in Dits)
         {

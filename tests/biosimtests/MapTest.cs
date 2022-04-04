@@ -1,9 +1,6 @@
 using BioSim;
-using ImageMagick;
 using Xunit;
 using System;
-using System.IO;
-
 namespace biosimtests;
 
 public class MapTest
@@ -129,7 +126,7 @@ public class MapTest
 
         TestDirHelper.CreateTestImage(data, 1, _imageDir);
         Map map = new Map(_imageDir);
-        var actual = map.ReadData();
+        var actual = map.RawData;
 
         Assert.Equal(data, actual);
     }
