@@ -8,7 +8,7 @@ namespace biosimtests;
 
 public class SimulationTest
 {
-    private const string _mapImagefn = "../../../tmp/mapImgage.png";
+    private const string _mapImagefn = "mapImgage.png";
 
     [Fact]
     public void TestConstuct()
@@ -54,7 +54,7 @@ public class SimulationTest
     [Fact]
     public void TestWholeSim()
     {
-        const string path = "../../../../../res/testres/small.png";
+        const string path = "../../../../../res/testres/firstsim.png";
         if (!File.Exists(path))
         {
             return;
@@ -62,15 +62,15 @@ public class SimulationTest
 
         MagickImage image = new MagickImage(path);
 
-        const int connectionCount = 8;
+        const int connectionCount = 2;
 
         Model model = new Model();
         model.InputCount = 2;
         model.InnerCount = 2;
         model.OutputCount = 4;
         model.ConnectionCount = connectionCount;
-        model.MutateChance = 0.01f;
-        model.MutateStrength = 0.5f;
+        model.MutateChance = 0.001f;
+        model.MutateStrength = 0.2f;
         Map simMap = new Map(path);
 
         InputFunction[] inputFunctions = {InputFunctions.NearToEast, InputFunctions.NearToSouth};
@@ -78,11 +78,11 @@ public class SimulationTest
                                             OutputFunctions.MoveWest, OutputFunctions.MoveEast};
 
         Simulation simulation = new Simulation(model, inputFunctions, outputFunctions, simMap);
-        simulation.InitialPopulation = 5;
-        simulation.Generations = 200;
-        simulation.Steps = 50;
-        simulation.MinBirthAmount = 2;
-        simulation.MaxBirthAmount = 4;
+        simulation.InitialPopulation = 1000;
+        simulation.Generations = 20;
+        simulation.Steps = 250;
+        simulation.MinBirthAmount = 1;
+        simulation.MaxBirthAmount = 2;
         simulation.RandomNumberGenerator = new Random(0);
 
         simulation.Setup();
@@ -102,9 +102,7 @@ public class SimulationTest
         int counter = 0;
         while (simulation.Update())
         {
-            MagickImage frame = new MagickImage(simulation.SimEnv.ReadData(), mrs);
-            frame.Write($"../../../../../tmp/imgs/frame{counter}.png");
-            collection.Add(frame);
+            collection.Add(new MagickImage(simulation.SimEnv.ReadData(), mrs));
             collection[counter].AnimationDelay = 10;
             counter++;
         }

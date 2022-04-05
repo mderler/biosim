@@ -20,6 +20,6 @@ static class TestDirHelper
         mrs.Width = width;
         mrs.Height = data.Length/3/width;
         MagickImage mImage = new MagickImage(data, mrs);
-        mImage.Write(filename, MagickFormat.Png);
+        mImage.Write("../../../../../tmp/"+filename, MagickFormat.Png);
     }
 }

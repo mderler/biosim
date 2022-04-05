@@ -143,7 +143,9 @@ public class SimulationEnviroment
 
     public byte[] ReadData()
     {
-        byte[] data = SimMap.RawData;
+        // Maybe a readonly span would be cleaner
+        byte[] data = new byte[SimMap.RawData.Length];
+        SimMap.RawData.CopyTo(data, 0);
 
         foreach (var item in Dits)
         {

@@ -5,7 +5,7 @@ namespace biosimtests;
 
 public class MapTest
 {
-    private const string _imageDir = "../tmp/image.png";
+    private const string _imageDir = "image.png";
 
     [Fact]
     public void TestConstuct()
