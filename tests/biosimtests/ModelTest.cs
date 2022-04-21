@@ -9,7 +9,7 @@ public class ModelTest
     [Fact]
     public void TestConstuct()
     {
-        Model model = new Model();
+        SLLModel model = new SLLModel();
     }
 
     [Fact]
@@ -20,7 +20,7 @@ public class ModelTest
         int outputCount = 20;
         int connectionsCount = 500;
 
-        Model model = new Model()
+        SLLModel model = new SLLModel()
         {
             InnerCount = innerCount,
             InputCount = inputCount,
@@ -58,7 +58,7 @@ public class ModelTest
         float mutateChance = 1f;
         float mutateStrength = 1f;
 
-        Model model = new Model()
+        SLLModel model = new SLLModel()
         {
             InnerCount = innerCount,
             InputCount = inputCount,
@@ -66,7 +66,7 @@ public class ModelTest
             ConnectionCount = connectionsCount,
             MutateChance = mutateChance,
             MutateStrength = mutateStrength,
-            RandomNumberGenerator = new Random(0)
+            RNG = new Random(0)
         };
 
         model.Randomize();
@@ -94,27 +94,6 @@ public class ModelTest
             Assert.True(item.dst < inputCount+innerCount+outputCount);
             Assert.True(item.dst > inputCount);
         }
-    }
-
-    [Fact]
-    public void TestOutput()
-    {
-        // TODO: Finish this test
-        Model model = new Model()
-        {
-            InputCount = 3,
-            InnerCount = 2,
-            OutputCount = 5,
-            ConnectionCount = 10,
-            RandomNumberGenerator = new Random(0)
-        };
-
-        model.Randomize();
-
-        var connections = model.Connections;
-        float[] input = {0.215f, 0.999f, 0.001f};
-
-        bool[] expected = {};
     }
 
     [Fact]
@@ -180,7 +159,7 @@ public class ModelTest
             true
         }; 
 
-        Model model = new Model();
+        SLLModel model = new SLLModel();
         model.InputCount = 12;
         model.InnerCount = 16;
         model.OutputCount = 11;

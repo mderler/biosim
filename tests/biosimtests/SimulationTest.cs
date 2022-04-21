@@ -15,7 +15,7 @@ public class SimulationTest
     {
         Simulation simulation = new Simulation
         (
-            new Model(),
+            new SLLModel(),
             new InputFunction[0],
             new OutputFunction[0],
             new Map(_mapImagefn)
@@ -33,7 +33,7 @@ public class SimulationTest
 
         Simulation simulation = new Simulation
         (
-            new Model(),
+            new SLLModel(),
             new InputFunction[0],
             new OutputFunction[0],
             new Map(_mapImagefn)
@@ -64,7 +64,7 @@ public class SimulationTest
 
         const int connectionCount = 2;
 
-        Model model = new Model();
+        SLLModel model = new SLLModel();
         model.InputCount = 2;
         model.InnerCount = 2;
         model.OutputCount = 4;
