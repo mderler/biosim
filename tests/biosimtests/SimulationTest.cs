@@ -69,7 +69,7 @@ public class SimulationTest
         model.InnerCount = 2;
         model.OutputCount = 4;
         model.ConnectionCount = connectionCount;
-        model.MutateChance = 0.001f;
+        model.MutateChance = 0f;
         model.MutateStrength = 0.2f;
         Map simMap = new Map(path);
 
