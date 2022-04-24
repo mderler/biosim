@@ -35,16 +35,16 @@ public class Simulation
         {
             _rnd = value;
             SimEnv.RandomNumberGenerator = value;
-            ModelTemplate.RandomNumberGenerator = value;
+            ModelTemplate.RNG = value;
         }
     }
-    public Model ModelTemplate { get; set; }
+    public SLLModel ModelTemplate { get; set; }
     public SimulationEnviroment SimEnv { get; private set; }
 
     private int _currentStep = 0;
     private int _currentGeneration = 0;
 
-    public Simulation(Model modelTemplate,
+    public Simulation(SLLModel modelTemplate,
                       InputFunction[] inputFunctions,
                       OutputFunction[] outputFunctions,
                       Map simMap)

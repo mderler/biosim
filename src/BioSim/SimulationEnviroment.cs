@@ -27,7 +27,7 @@ public class SimulationEnviroment
     }
 
 
-    public bool TryAddRandomDits(int amount, Model model)
+    public bool TryAddRandomDits(int amount, SLLModel model)
     {
         List<(int, int)> validPositions = new List<(int, int)>();
         for (int y = 0; y < SimMap.Height; y++)
@@ -48,7 +48,7 @@ public class SimulationEnviroment
         {
             int index = RandomNumberGenerator.Next(validPositions.Count);
 
-            Model cModel = model.Copy();
+            SLLModel cModel = model.Copy();
             cModel.Randomize();
 
             Dit dit = new Dit(validPositions[index], cModel);
@@ -59,7 +59,7 @@ public class SimulationEnviroment
         return empty;
     }
 
-    public bool TryAddRandomDits(List<(int amount, Model model)> toAdd)
+    public bool TryAddRandomDits(List<(int amount, SLLModel model)> toAdd)
     {
         List<(int, int)> validPositions = new List<(int, int)>();
         for (int y = 0; y < SimMap.Height; y++)
@@ -83,7 +83,7 @@ public class SimulationEnviroment
             {
                 int index = RandomNumberGenerator.Next(validPositions.Count);
     
-                Model cModel = item.model.Copy();
+                SLLModel cModel = item.model.Copy();
                 cModel.Randomize();
                 cModel.Mutate();
 
@@ -128,7 +128,7 @@ public class SimulationEnviroment
     public void KillAndCreateDits(int minBirthAmount, int maxBirthAmount)
     {
         List<Dit> oldDits = Dits.FindAll((Dit dit) => SimMap.GetSpot(dit.position) == Map.CellType.survive);
-        List<(int, Model)> toAdd = new List<(int, Model)>();
+        List<(int, SLLModel)> toAdd = new List<(int, SLLModel)>();
         Dits.Clear();
 
         while (oldDits.Count != 0)
