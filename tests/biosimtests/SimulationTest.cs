@@ -54,7 +54,7 @@ public class SimulationTest
     [Fact]
     public void TestWholeSim()
     {
-        const string path = "../../../../../res/testres/firstsim.png";
+        const string path = "../../../../../res/testres/corner.png";
         if (!File.Exists(path))
         {
             return;
@@ -66,11 +66,11 @@ public class SimulationTest
 
         Model model = new Model();
         model.InputCount = 2;
-        model.InnerCount = 2;
+        model.InnerCount = 5;
         model.OutputCount = 4;
         model.ConnectionCount = connectionCount;
-        model.MutateChance = 0.001f;
-        model.MutateStrength = 0.2f;
+        model.MutateChance = 0.0005f;
+        model.MutateStrength = 0.001f;
         Map simMap = new Map(path);
 
         InputFunction[] inputFunctions = {InputFunctions.NearToEast, InputFunctions.NearToSouth};
@@ -79,10 +79,10 @@ public class SimulationTest
 
         Simulation simulation = new Simulation(model, inputFunctions, outputFunctions, simMap);
         simulation.InitialPopulation = 1000;
-        simulation.Generations = 20;
-        simulation.Steps = 250;
-        simulation.MinBirthAmount = 1;
-        simulation.MaxBirthAmount = 2;
+        simulation.Generations = 50;
+        simulation.Steps = 260;
+        simulation.MinBirthAmount = 2;
+        simulation.MaxBirthAmount = 10;
         simulation.RandomNumberGenerator = new Random(0);
 
         simulation.Setup();
