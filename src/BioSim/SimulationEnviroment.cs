@@ -138,12 +138,12 @@ public class SimulationEnviroment
             toAdd.Add((amount, oldDits[index].model));
             oldDits.RemoveAt(index);
         }
+
         TryAddRandomDits(toAdd);
     }
 
     public byte[] ReadData()
     {
-        // Maybe a readonly span would be cleaner
         byte[] data = new byte[SimMap.RawData.Length];
         SimMap.RawData.CopyTo(data, 0);
 
