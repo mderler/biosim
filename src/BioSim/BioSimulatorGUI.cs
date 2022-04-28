@@ -4,8 +4,8 @@ namespace BioSim;
 
 class BioSimulatorGUI
 {
-    private const int DEFAULT_WIDTH = 720;
-    private const int DEFAULT_HEIGHT = 1270;
+    private const int DEFAULT_WIDTH = 1260;
+    private const int DEFAULT_HEIGHT = 720;
 
     private Window _window;
     private readonly FunctionFactory _simulationFactory;
@@ -25,12 +25,11 @@ class BioSimulatorGUI
         _window = new Window("Bio Simulator");
         _window.DefaultWidth = DEFAULT_WIDTH;
         _window.DefaultHeight = DEFAULT_HEIGHT;
-        
-        NewSimButton newSimButton = new NewSimButton();
-        _window.Add(newSimButton);
+
+        SimulationDisplay simulationDisplay = new SimulationDisplay();
 
         HBox mainBox = new HBox();
-        
+        mainBox.Add(simulationDisplay);
         
         _window.ShowAll();
     }

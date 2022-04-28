@@ -18,6 +18,9 @@ class NewSimButton : Button
 
 class NewSimWindow : Window
 {
+    public readonly Button createButton;
+    public Simulation? Simulation { get; private set; }
+
     public NewSimWindow() : base("Create new Simulation")
     {
         VBox outer = new VBox();
@@ -46,8 +49,7 @@ class NewSimWindow : Window
         HBox buttonBox = new HBox();
         outer.Add(buttonBox);
 
-        Button createButton = new Button("Create");
-        createButton.Clicked += OnCreateButtonClicked;
+        createButton = new Button("Create");
         buttonBox.Add(createButton);
 
         Button cancelButten = new Button("Cancel");
@@ -57,7 +59,7 @@ class NewSimWindow : Window
         ShowAll();
     }
 
-    private void OnCreateButtonClicked(object? sender, EventArgs e)
+    private void CreateButtonClicked(object? obj, EventArgs e)
     {
         
     }

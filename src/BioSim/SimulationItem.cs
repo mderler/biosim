@@ -61,16 +61,21 @@ class SimulationItem : VBox
 
     private void DeleteItem(object? obj, EventArgs e)
     {
-
+        DeleteItemWindow delete = new DeleteItemWindow();
+        delete.DeleteButton.Clicked += (object? obj, EventArgs e) => Destroy();
     }
 }
 
 class DeleteItemWindow : Window
 {
+    public readonly Button DeleteButton;
+
     public DeleteItemWindow() : base("Delete Simulation")
     {
         Label warning = new Label("Are you sure that you want to delete this Simulation?");
-        Button cancel = new Button("Cancel");
-        Button delete = new Button("Delete");
+        Button cancelButton = new Button("Cancel");
+        cancelButton.Clicked += (object? obj, EventArgs e) => Destroy();
+
+        DeleteButton = new Button("Delete");
     }
 }
