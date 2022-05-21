@@ -14,23 +14,26 @@ class BioSimulatorGUI
     {
         _simulationFactory = new FunctionFactory();
         #region RegisterIOFuncions
-            _simulationFactory.RegisterIOFunction("Sense left & right", InputFunctions.NearToEast);
-            _simulationFactory.RegisterIOFunction("Sense up & down", InputFunctions.NearToSouth);
-            _simulationFactory.RegisterIOFunction("Move left", OutputFunctions.MoveWest);
-            _simulationFactory.RegisterIOFunction("Move right", OutputFunctions.MoveEast);
-            _simulationFactory.RegisterIOFunction("Move up", OutputFunctions.MoveNorth);
-            _simulationFactory.RegisterIOFunction("Move down", OutputFunctions.MoveSouth);
+        _simulationFactory.RegisterIOFunction("Sense left & right", InputFunctions.NearToEast);
+        _simulationFactory.RegisterIOFunction("Sense up & down", InputFunctions.NearToSouth);
+        _simulationFactory.RegisterIOFunction("Move left", OutputFunctions.MoveWest);
+        _simulationFactory.RegisterIOFunction("Move right", OutputFunctions.MoveEast);
+        _simulationFactory.RegisterIOFunction("Move up", OutputFunctions.MoveNorth);
+        _simulationFactory.RegisterIOFunction("Move down", OutputFunctions.MoveSouth);
         #endregion
 
         _window = new Window("Bio Simulator");
         _window.DefaultWidth = DEFAULT_WIDTH;
         _window.DefaultHeight = DEFAULT_HEIGHT;
 
-        SimulationDisplay simulationDisplay = new SimulationDisplay();
+        SimulationDisplay simulationDisplay = new SimulationDisplay(DEFAULT_HEIGHT / 11);
+        simulationDisplay.WidthRequest = DEFAULT_WIDTH / 3;
 
         HBox mainBox = new HBox();
-        mainBox.Add(simulationDisplay);
-        
+
+        mainBox.PackStart(simulationDisplay, false, false, 0);
+
+        _window.Add(mainBox);
         _window.ShowAll();
     }
 }

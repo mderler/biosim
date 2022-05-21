@@ -4,15 +4,15 @@ namespace BioSim;
 
 class SimulationDisplay : VBox
 {
-    public SimulationDisplay()
+    public SimulationDisplay(int taskBarHeight)
     {
         Button addButton = new Button("Add");
 
-        ButtonBox buttonBox = new ButtonBox(Orientation.Horizontal);
-        buttonBox.Add(addButton);
+        HBox taskBar = new HBox();
+        taskBar.HeightRequest = taskBarHeight;
+        taskBar.Add(addButton);
 
-        VBox mainBox = new VBox();
-        mainBox.Add(buttonBox);
+        PackStart(taskBar, false, false, 0);
 
         VBox simulationItems = new VBox();
     }
