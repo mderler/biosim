@@ -24,9 +24,9 @@ public class NumericalSimulationParameterAttribute : SimulationParameterAttribut
     }
 }
 
-public class MiscSimulationParameterAttribte : SimulationParameterAttribute
+public class TypeSimulationParameterAttribte : SimulationParameterAttribute
 {
-    public MiscSimulationParameterAttribte(string name) : base(name)
+    public TypeSimulationParameterAttribte(string name) : base(name)
     {
 
     }
