@@ -1,6 +1,0 @@
-namespace BioSim;
-
-class SimulationParameterHolder
-{
-
-}
