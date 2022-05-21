@@ -2,7 +2,7 @@ using Gtk;
 
 namespace BioSim;
 
-class BioSimulatorGUI
+class BioSimulator
 {
     private const int DEFAULT_WIDTH = 1260;
     private const int DEFAULT_HEIGHT = 720;
@@ -10,7 +10,7 @@ class BioSimulatorGUI
     private Window _window;
     private readonly FunctionFactory _simulationFactory;
 
-    public BioSimulatorGUI()
+    public BioSimulator()
     {
         _simulationFactory = new FunctionFactory();
         #region RegisterIOFuncions
@@ -27,6 +27,7 @@ class BioSimulatorGUI
         _window.DefaultHeight = DEFAULT_HEIGHT;
 
         SimulationDisplay simulationDisplay = new SimulationDisplay(DEFAULT_HEIGHT / 11);
+
         simulationDisplay.WidthRequest = DEFAULT_WIDTH / 3;
 
         HBox mainBox = new HBox();

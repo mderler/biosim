@@ -18,7 +18,8 @@ class SimulationItem : VBox
 
         _hButtonBox = new HButtonBox();
         _hButtonBox.Add(startStopButton);
-        
+
+        Add(_hButtonBox);
     }
 
     public void UpdateSimulation()

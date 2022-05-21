@@ -1,0 +1,6 @@
+namespace BioSim;
+
+class SimulationParameterHolder
+{
+
+}

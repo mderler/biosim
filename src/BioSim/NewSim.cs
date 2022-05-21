@@ -4,25 +4,31 @@ namespace BioSim;
 
 class NewSimButton : Button
 {
-    public NewSimButton() : base("New Simulation")
+    private SimulationDisplay _display;
+
+    public NewSimButton(SimulationDisplay display) : base("New Simulation")
     {
         Clicked += OnButtenClicked;
+        _display = display;
     }
 
     private void OnButtenClicked(object? sender, EventArgs e)
     {
-        new NewSimWindow();
+        new NewSimWindow(_display);
     }
 }
 
 
 class NewSimWindow : Window
 {
+    private SimulationDisplay _display;
     public readonly Button createButton;
     public Simulation? Simulation { get; private set; }
 
-    public NewSimWindow() : base("Create new Simulation")
+    public NewSimWindow(SimulationDisplay display) : base("Create new Simulation")
     {
+        _display = display;
+
         VBox outer = new VBox();
         Add(outer);
 
@@ -50,6 +56,7 @@ class NewSimWindow : Window
         outer.Add(buttonBox);
 
         createButton = new Button("Create");
+        createButton.Clicked += CreateButtonClicked;
         buttonBox.Add(createButton);
 
         Button cancelButten = new Button("Cancel");
@@ -61,6 +68,6 @@ class NewSimWindow : Window
 
     private void CreateButtonClicked(object? obj, EventArgs e)
     {
-        
+        Destroy();
     }
 }
