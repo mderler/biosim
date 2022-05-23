@@ -1,7 +1,7 @@
 namespace BioSim;
 
 public class SimulationEnviroment
-{ 
+{
     public Map SimMap { get; set; }
     public List<Dit> Dits { get; private set; }
     private Random? _rnd;
@@ -27,7 +27,7 @@ public class SimulationEnviroment
     }
 
 
-    public bool TryAddRandomDits(int amount, SLLModel model)
+    public bool TryAddRandomDits(int amount, Model model)
     {
         List<(int, int)> validPositions = new List<(int, int)>();
         for (int y = 0; y < SimMap.Height; y++)
@@ -48,7 +48,7 @@ public class SimulationEnviroment
         {
             int index = RandomNumberGenerator.Next(validPositions.Count);
 
-            SLLModel cModel = model.Copy();
+            Model cModel = model.Copy();
             cModel.Randomize();
 
             Dit dit = new Dit(validPositions[index], cModel);
@@ -59,7 +59,7 @@ public class SimulationEnviroment
         return empty;
     }
 
-    public bool TryAddRandomDits(List<(int amount, SLLModel model)> toAdd)
+    public bool TryAddRandomDits(List<(int amount, Model model)> toAdd)
     {
         List<(int, int)> validPositions = new List<(int, int)>();
         for (int y = 0; y < SimMap.Height; y++)
@@ -82,8 +82,8 @@ public class SimulationEnviroment
             for (int i = 0; i < count; i++)
             {
                 int index = RandomNumberGenerator.Next(validPositions.Count);
-    
-                SLLModel cModel = item.model.Copy();
+
+                Model cModel = item.model.Copy();
                 cModel.Randomize();
                 cModel.Mutate();
 
@@ -128,12 +128,12 @@ public class SimulationEnviroment
     public void KillAndCreateDits(int minBirthAmount, int maxBirthAmount)
     {
         List<Dit> oldDits = Dits.FindAll((Dit dit) => SimMap.GetSpot(dit.position) == Map.CellType.survive);
-        List<(int, SLLModel)> toAdd = new List<(int, SLLModel)>();
+        List<(int, Model)> toAdd = new List<(int, Model)>();
         Dits.Clear();
 
         while (oldDits.Count != 0)
         {
-            int amount = RandomNumberGenerator.Next(minBirthAmount, maxBirthAmount+1);
+            int amount = RandomNumberGenerator.Next(minBirthAmount, maxBirthAmount + 1);
             int index = RandomNumberGenerator.Next(oldDits.Count);
             toAdd.Add((amount, oldDits[index].model));
             oldDits.RemoveAt(index);
@@ -149,10 +149,10 @@ public class SimulationEnviroment
 
         foreach (var item in Dits)
         {
-            int index = (item.position.x+item.position.y*SimMap.Width)*3;
+            int index = (item.position.x + item.position.y * SimMap.Width) * 3;
             data[index] = 255;
-            data[index+1] = 0;
-            data[index+2] = 0;
+            data[index + 1] = 0;
+            data[index + 2] = 0;
         }
 
         return data;

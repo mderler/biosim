@@ -16,4 +16,9 @@ public class ClassicNNModel : Model
     {
         throw new NotImplementedException();
     }
+
+    public override Model Copy()
+    {
+        throw new NotImplementedException();
+    }
 }

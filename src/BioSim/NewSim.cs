@@ -32,25 +32,7 @@ class NewSimWindow : Window
         VBox outer = new VBox();
         Add(outer);
 
-        HBox simNameBox = new HBox();
-        outer.Add(simNameBox);
-        Label simNameLabel = new Label("Simulation Name: ");
-        simNameBox.Add(simNameLabel);
-        Entry simNameEntry = new Entry();
-        simNameBox.Add(simNameEntry);
-
-        HBox worldSizeBox = new HBox();
-        outer.Add(worldSizeBox);
-        Label worldSizeLabel = new Label("World Size");
-        worldSizeBox.Add(worldSizeLabel);
-        Label worldXLabel = new Label("x:");
-        worldSizeBox.Add(worldXLabel);
-        Entry worldXEntry = new Entry();
-        worldSizeBox.Add(worldXEntry);
-        Label worldYLabel = new Label("y:");
-        worldSizeBox.Add(worldYLabel);
-        Entry worldYEntry = new Entry();
-        worldSizeBox.Add(worldYEntry);
+        // Simulation sim = new Simulation();
 
         HBox buttonBox = new HBox();
         outer.Add(buttonBox);

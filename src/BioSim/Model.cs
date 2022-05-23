@@ -28,4 +28,5 @@ public abstract class Model
     public abstract bool[] GetOutput(float[] input);
     public abstract void Randomize();
     public abstract void Mutate();
+    public abstract Model Copy();
 }

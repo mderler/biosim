@@ -3,7 +3,7 @@ namespace BioSim;
 public class Simulation
 {
     private Map _simMap;
-    public Map SimMap 
+    public Map SimMap
     {
         get => _simMap;
         set
@@ -31,20 +31,20 @@ public class Simulation
 
             return _rnd;
         }
-        set 
+        set
         {
             _rnd = value;
             SimEnv.RandomNumberGenerator = value;
             ModelTemplate.RNG = value;
         }
     }
-    public SLLModel ModelTemplate { get; set; }
+    public Model ModelTemplate { get; set; }
     public SimulationEnviroment SimEnv { get; private set; }
 
     private int _currentStep = 0;
     private int _currentGeneration = 0;
 
-    public Simulation(SLLModel modelTemplate,
+    public Simulation(Model modelTemplate,
                       InputFunction[] inputFunctions,
                       OutputFunction[] outputFunctions,
                       Map simMap)
@@ -115,7 +115,7 @@ public class Simulation
 
     public void SaveState()
     {
-        
+
     }
 
     public void LoadState()

@@ -11,7 +11,7 @@ public class SLLModel : Model
     public (int src, int dst, float wht, bool act)[] Connections
     {
         get { return _connections.ToArray(); }
-        set 
+        set
         {
             _connections = new List<(int, int, float, bool)>(value);
             _connectionCount = value.Length;
@@ -22,7 +22,7 @@ public class SLLModel : Model
     public int ConnectionCount
     {
         get => _connectionCount;
-        set 
+        set
         {
             if (value < _connectionCount)
             {
@@ -60,22 +60,22 @@ public class SLLModel : Model
     override public bool[] GetOutput(float[] input)
     {
         bool[] output = new bool[OutputCount];
-        float[] tmp = new float[InnerCount+OutputCount];
+        float[] tmp = new float[InnerCount + OutputCount];
 
         for (int i = 0; i < _connections.Count; i++)
         {
             if (_connections[i].act)
             {
                 if (_connections[i].src >= InputCount)
-                    tmp[_connections[i].dst-InputCount] += MathF.Tanh(tmp[_connections[i].src-InputCount] * _connections[i].wht);
+                    tmp[_connections[i].dst - InputCount] += MathF.Tanh(tmp[_connections[i].src - InputCount] * _connections[i].wht);
                 else
-                    tmp[_connections[i].dst-InputCount] += input[_connections[i].src] * _connections[i].wht;
+                    tmp[_connections[i].dst - InputCount] += input[_connections[i].src] * _connections[i].wht;
             }
         }
 
         for (int i = 0; i < OutputCount; i++)
         {
-            output[i] = 0f <= tmp[i+InnerCount];
+            output[i] = 0f <= tmp[i + InnerCount];
         }
 
         return output;
@@ -85,12 +85,12 @@ public class SLLModel : Model
     {
         for (int i = 0; i < _connectionCount; i++)
         {
-            (int src, int dst, float wht, bool) t = new (   
+            (int src, int dst, float wht, bool) t = new(
                 RNG.Next(InputCount + InnerCount),
-                RNG.Next(InputCount, InputCount+InnerCount+OutputCount),
-                RNG.NextSingle()*8-4,
+                RNG.Next(InputCount, InputCount + InnerCount + OutputCount),
+                RNG.NextSingle() * 8 - 4,
                 false);
-            if (_connections.Count == 0 || _connections[_connections.Count-1].src < t.src)
+            if (_connections.Count == 0 || _connections[_connections.Count - 1].src < t.src)
                 _connections.Add(t);
             else
             {
@@ -119,11 +119,11 @@ public class SLLModel : Model
                 int index = RNG.Next(_connections.Count);
                 var change = _connections[index];
                 _connections.RemoveAt(index);
-                
+
                 if (RNG.NextSingle() < MutateStrength)
                 {
-                    change.src = RNG.Next(InputCount+InnerCount);
-                    if (change.src > _connections[_connections.Count-1].src)
+                    change.src = RNG.Next(InputCount + InnerCount);
+                    if (change.src > _connections[_connections.Count - 1].src)
                     {
                         index = _connections.Count;
                     }
@@ -141,11 +141,11 @@ public class SLLModel : Model
                 }
                 if (RNG.NextSingle() < MutateStrength)
                 {
-                    change.dst = RNG.Next(InputCount, InputCount+InnerCount+OutputCount);
+                    change.dst = RNG.Next(InputCount, InputCount + InnerCount + OutputCount);
                 }
                 if (RNG.NextSingle() < MutateStrength)
                 {
-                    change.wht = RNG.NextSingle()*8-4;
+                    change.wht = RNG.NextSingle() * 8 - 4;
                 }
 
                 change.act = false;
@@ -165,7 +165,7 @@ public class SLLModel : Model
 
         List<int> intmp = new List<int>();
         List<int> outtmp = new List<int>();
-        
+
         bool changed;
         do
         {
@@ -191,7 +191,7 @@ public class SLLModel : Model
 
                 // check and add the connections that are directly or indirectly
                 // connected to the output
-                if (_connections[i].dst >= InputCount+InnerCount ||
+                if (_connections[i].dst >= InputCount + InnerCount ||
                     outtmp.Contains(_connections[i].dst))
                 {
                     if (!outCon.Contains(i))
@@ -220,7 +220,7 @@ public class SLLModel : Model
         }
     }
 
-    public SLLModel Copy()
+    public override Model Copy()
     {
         SLLModel model = new SLLModel(this.MutateChance, this.MutateStrength, this.RNG)
         {

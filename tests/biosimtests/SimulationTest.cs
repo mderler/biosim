@@ -25,7 +25,7 @@ public class SimulationTest
     [Fact]
     public void TestUpdate()
     {
-        byte[] data = {0, 0, 0};
+        byte[] data = { 0, 0, 0 };
         TestDirHelper.CreateTestImage(data, 1, _mapImagefn);
 
         const int generations = 50;
@@ -43,7 +43,7 @@ public class SimulationTest
             Steps = steps
         };
 
-        for (int i = 0; i < generations*steps; i++)
+        for (int i = 0; i < generations * steps; i++)
         {
             Assert.True(simulation.Update());
         }
@@ -73,7 +73,7 @@ public class SimulationTest
         model.MutateStrength = 0.2f;
         Map simMap = new Map(path);
 
-        InputFunction[] inputFunctions = {InputFunctions.NearToEast, InputFunctions.NearToSouth};
+        InputFunction[] inputFunctions = { InputFunctions.NearToEast, InputFunctions.NearToSouth };
         OutputFunction[] outputFunctions = {OutputFunctions.MoveNorth, OutputFunctions.MoveSouth,
                                             OutputFunctions.MoveWest, OutputFunctions.MoveEast};
 
@@ -92,12 +92,6 @@ public class SimulationTest
         mrs.Format = MagickFormat.Rgb;
         mrs.Width = image.Width;
         mrs.Height = image.Height;
-
-        int ditsCount = simulation.SimEnv.Dits.Count;
-        for (int i = 0; i < ditsCount; i++)
-        {
-            Assert.Equal(simulation.SimEnv.Dits[i].model.ConnectionCount, connectionCount);
-        }
 
         int counter = 0;
         while (simulation.Update())
