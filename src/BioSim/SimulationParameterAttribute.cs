@@ -1,7 +1,12 @@
 namespace BioSim;
 
-public abstract class SimulationParameterAttribute : Attribute
+[AttributeUsage(AttributeTargets.Field | AttributeTargets.Property, AllowMultiple = false)]
+public class SimulationParameterAttribute : Attribute
 {
+    public bool Include
+    {
+        get;
+    }
     public string Name
     {
         get;
@@ -10,24 +15,10 @@ public abstract class SimulationParameterAttribute : Attribute
     public SimulationParameterAttribute(string name)
     {
         Name = name;
+        Include = false;
     }
 }
 
-public class NumericalSimulationParameterAttribute : SimulationParameterAttribute
-{
-    public object? defaultValue = null;
-    public object? min;
-    public object? max;
-    public NumericalSimulationParameterAttribute(string name) : base(name)
-    {
+public class ExcludeParameterAttribute : Attribute { }
 
-    }
-}
-
-public class TypeSimulationParameterAttribute : SimulationParameterAttribute
-{
-    public TypeSimulationParameterAttribute(string name) : base(name)
-    {
-
-    }
-}
+public class IncludeAllAsParametersAttribute : Attribute { }

@@ -1,5 +1,6 @@
 namespace BioSim;
 
+[IncludeAllAsParameters]
 public class Simulation
 {
     private Map _simMap;
@@ -19,7 +20,7 @@ public class Simulation
     public OutputFunction[] OutputFunctions { get; set; }
     public int MinBirthAmount { get; set; }
     public int MaxBirthAmount { get; set; }
-    private Random? _rnd;
+    private Random _rnd;
     public Random RandomNumberGenerator
     {
         get
@@ -39,27 +40,35 @@ public class Simulation
         }
     }
     public Model ModelTemplate { get; set; }
+    [ExcludeParameter]
     public SimulationEnviroment SimEnv { get; private set; }
 
     private int _currentStep = 0;
     private int _currentGeneration = 0;
 
+    public Simulation() { }
+
     public Simulation(Model modelTemplate,
                       InputFunction[] inputFunctions,
                       OutputFunction[] outputFunctions,
-                      Map simMap)
+                      Map simMap,
+                      int minBirthAmount = 1,
+                      int maxBrithAmount = 2,
+                      int initialPopulation = 0,
+                      int steps = 0,
+                      int generations = 0)
     {
-        MinBirthAmount = 1;
-        MaxBirthAmount = 2;
+        MinBirthAmount = minBirthAmount;
+        MaxBirthAmount = maxBrithAmount;
         ModelTemplate = modelTemplate;
         InputFunctions = inputFunctions;
         OutputFunctions = outputFunctions;
         _simMap = simMap;
-        SimEnv = new SimulationEnviroment(_simMap);
     }
 
     public void Setup()
     {
+        SimEnv = new SimulationEnviroment(_simMap);
         SimEnv.TryAddRandomDits(InitialPopulation, ModelTemplate);
     }
 

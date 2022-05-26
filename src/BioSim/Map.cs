@@ -32,7 +32,7 @@ public class Map
         Height = image.Height;
 
         _mapData = new CellType[Height][];
-        RawData = new byte[Width*Height*3];
+        RawData = new byte[Width * Height * 3];
 
         Interpetrate(image);
     }
@@ -43,7 +43,7 @@ public class Map
         Height = image.Height;
 
         _mapData = new CellType[Height][];
-        RawData = new byte[Width*Height*3];
+        RawData = new byte[Width * Height * 3];
 
         Interpetrate(image);
     }
@@ -59,19 +59,19 @@ public class Map
 
     private void Interpetrate(MagickImage image)
     {
-        byte[]? data = image.GetPixels().ToByteArray(0, 0, Width, Height, "RGB");
+        byte[] data = image.GetPixels().ToByteArray(0, 0, Width, Height, "RGB");
 
         if (data == null)
             throw new Exception("Image data must not be null");
-        
 
-        for (int i = 0; i < data.Length; i+=3)
+
+        for (int i = 0; i < data.Length; i += 3)
         {
-            int p = i/3;
-            int y = p/Width;
-            int x = p%Width;
+            int p = i / 3;
+            int y = p / Width;
+            int x = p % Width;
 
-            if (x==0)
+            if (x == 0)
                 _mapData[y] = new CellType[Width];
 
             // Is the score high, the mapping is bad 
@@ -79,17 +79,17 @@ public class Map
             foreach (var item in _defaultMappings)
             {
                 int score = 0;
-                score += Math.Abs(item.r-data[i]);
-                score += Math.Abs(item.g-data[i+1]);
-                score += Math.Abs(item.b-data[i+2]);
+                score += Math.Abs(item.r - data[i]);
+                score += Math.Abs(item.g - data[i + 1]);
+                score += Math.Abs(item.b - data[i + 2]);
 
                 if (score <= bestScore)
                 {
                     _mapData[y][x] = (CellType)item.c;
 
                     RawData[i] = item.r;
-                    RawData[i+1] = item.g;
-                    RawData[i+2] = item.b;
+                    RawData[i + 1] = item.g;
+                    RawData[i + 2] = item.b;
 
                     bestScore = score;
                 }

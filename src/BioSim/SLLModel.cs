@@ -1,9 +1,7 @@
 namespace BioSim;
 
-[TypeSimulationParameter("Model")]
 public class SLLModel : Model
 {
-    [NumericalSimulationParameter("Input Count")]
     public int InputCount { get; set; }
     public int InnerCount { get; set; }
     public int OutputCount { get; set; }

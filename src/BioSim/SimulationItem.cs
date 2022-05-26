@@ -43,7 +43,7 @@ class SimulationItem : VBox
         }
     }
 
-    private void StartStopButtonClicked(object? obj, EventArgs e)
+    private void StartStopButtonClicked(object obj, EventArgs e)
     {
         if (obj is null)
         {
@@ -60,10 +60,10 @@ class SimulationItem : VBox
         // disable all buttons and let user know the sim is finished
     }
 
-    private void DeleteItem(object? obj, EventArgs e)
+    private void DeleteItem(object obj, EventArgs e)
     {
         DeleteItemWindow delete = new DeleteItemWindow();
-        delete.DeleteButton.Clicked += (object? obj, EventArgs e) => Destroy();
+        delete.DeleteButton.Clicked += (object obj, EventArgs e) => Destroy();
     }
 }
 
@@ -75,7 +75,7 @@ class DeleteItemWindow : Window
     {
         Label warning = new Label("Are you sure that you want to delete this Simulation?");
         Button cancelButton = new Button("Cancel");
-        cancelButton.Clicked += (object? obj, EventArgs e) => Destroy();
+        cancelButton.Clicked += (object obj, EventArgs e) => Destroy();
 
         DeleteButton = new Button("Delete");
     }

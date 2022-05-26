@@ -4,7 +4,7 @@ public class SimulationEnviroment
 {
     public Map SimMap { get; set; }
     public List<Dit> Dits { get; private set; }
-    private Random? _rnd;
+    private Random _rnd;
 
     public Random RandomNumberGenerator
     {

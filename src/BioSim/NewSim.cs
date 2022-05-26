@@ -12,7 +12,7 @@ class NewSimButton : Button
         _display = display;
     }
 
-    private void OnButtenClicked(object? sender, EventArgs e)
+    private void OnButtenClicked(object sender, EventArgs e)
     {
         new NewSimWindow(_display);
     }
@@ -23,7 +23,7 @@ class NewSimWindow : Window
 {
     private SimulationDisplay _display;
     public readonly Button createButton;
-    public Simulation? Simulation { get; private set; }
+    public Simulation Simulation { get; private set; }
 
     public NewSimWindow(SimulationDisplay display) : base("Create new Simulation")
     {
@@ -42,13 +42,13 @@ class NewSimWindow : Window
         buttonBox.Add(createButton);
 
         Button cancelButten = new Button("Cancel");
-        cancelButten.Clicked += (object? sender, EventArgs e) => Destroy();
+        cancelButten.Clicked += (object sender, EventArgs e) => Destroy();
         buttonBox.Add(cancelButten);
 
         ShowAll();
     }
 
-    private void CreateButtonClicked(object? obj, EventArgs e)
+    private void CreateButtonClicked(object obj, EventArgs e)
     {
         ReflectParameters();
         Destroy();
@@ -57,38 +57,30 @@ class NewSimWindow : Window
 
     private void ReflectParameters()
     {
-        System.Console.WriteLine("Hello");
-        var numAttrFields = from assembly in AppDomain.CurrentDomain.GetAssemblies()
-                            from type in assembly.GetTypes()
-                            from field in type.GetFields()
-                            where field.IsDefined(typeof(NumericalSimulationParameterAttribute), true)
-                            select field;
+        var paraFields = from assembly in AppDomain.CurrentDomain.GetAssemblies()
+                         from type in assembly.GetTypes()
+                         from field in type.GetFields()
+                         where field.IsDefined(typeof(SimulationParameterAttribute), false) |
+                             (type.IsDefined(typeof(IncludeAllAsParametersAttribute), false) &
+                             !field.IsDefined(typeof(ExcludeParameterAttribute), false))
+                         select field;
 
-        var numAttrProps = from assembly in AppDomain.CurrentDomain.GetAssemblies()
-                           from type in assembly.GetTypes()
-                           from prop in type.GetProperties()
-                           where prop.IsDefined(typeof(NumericalSimulationParameterAttribute), true)
-                           select prop;
+        var paraProps = from assembly in AppDomain.CurrentDomain.GetAssemblies()
+                        from type in assembly.GetTypes()
+                        from prop in type.GetProperties()
+                        where prop.IsDefined(typeof(SimulationParameterAttribute), false) |
+                            (type.IsDefined(typeof(IncludeAllAsParametersAttribute), false) &
+                            !prop.IsDefined(typeof(ExcludeParameterAttribute), false))
+                        select prop;
 
-        var typeAttrTypes = from assembly in AppDomain.CurrentDomain.GetAssemblies()
-                            from type in assembly.GetTypes()
-                            where type.IsDefined(typeof(TypeSimulationParameterAttribute), true)
-                            select type;
-
-        foreach (var item in numAttrFields)
+        foreach (var item in paraFields)
         {
-            System.Console.WriteLine(item.Name);
+            System.Console.WriteLine(item);
         }
 
-        foreach (var item in numAttrProps)
+        foreach (var item in paraProps)
         {
-            System.Console.WriteLine(item.Name);
+            System.Console.WriteLine(item);
         }
-
-        foreach (var item in typeAttrTypes)
-        {
-            System.Console.WriteLine(item.Name);
-        }
-
     }
 }
