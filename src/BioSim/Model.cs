@@ -2,6 +2,7 @@ namespace BioSim;
 
 public abstract class Model
 {
+    [NumericalSimulationParameter("Mutate Chance")]
     public float MutateChance { get; set; }
     public float MutateStrength { get; set; }
     public Random RNG { get; set; }
