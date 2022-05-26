@@ -61,37 +61,33 @@ class NewSimWindow : Window
         var numAttrFields = from assembly in AppDomain.CurrentDomain.GetAssemblies()
                             from type in assembly.GetTypes()
                             from field in type.GetFields()
-                            where field.IsDefined(typeof(NumericalSimulationParameterAttribute), false)
+                            where field.IsDefined(typeof(NumericalSimulationParameterAttribute), true)
                             select field;
+
+        var numAttrProps = from assembly in AppDomain.CurrentDomain.GetAssemblies()
+                           from type in assembly.GetTypes()
+                           from prop in type.GetProperties()
+                           where prop.IsDefined(typeof(NumericalSimulationParameterAttribute), true)
+                           select prop;
 
         var typeAttrTypes = from assembly in AppDomain.CurrentDomain.GetAssemblies()
                             from type in assembly.GetTypes()
-                            where type.IsDefined(typeof(TypeSimulationParameterAttribute), false)
+                            where type.IsDefined(typeof(TypeSimulationParameterAttribute), true)
                             select type;
 
-        var ass = AppDomain.CurrentDomain.GetAssemblies();
-        var sim = typeof(Simulation);
-        foreach (var a in ass)
-        {
-            foreach (var item in a.GetTypes())
-            {
-                foreach (var field in item.GetFields())
-                {
-                    if (field.IsDefined(typeof(NumericalSimulationParameterAttribute), true))
-                    {
-                        System.Console.WriteLine(field.Name);
-                    }
-                }
-            }
-        }
         foreach (var item in numAttrFields)
         {
-            System.Console.WriteLine(item);
+            System.Console.WriteLine(item.Name);
+        }
+
+        foreach (var item in numAttrProps)
+        {
+            System.Console.WriteLine(item.Name);
         }
 
         foreach (var item in typeAttrTypes)
         {
-            System.Console.WriteLine(item);
+            System.Console.WriteLine(item.Name);
         }
 
     }
