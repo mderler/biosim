@@ -26,6 +26,8 @@ class BioSimulator
         _window.DefaultWidth = DEFAULT_WIDTH;
         _window.DefaultHeight = DEFAULT_HEIGHT;
 
+        _window.Destroyed += Terminate;
+
         SimulationDisplay simulationDisplay = new SimulationDisplay(DEFAULT_HEIGHT / 11);
 
         simulationDisplay.WidthRequest = DEFAULT_WIDTH / 3;
@@ -36,5 +38,10 @@ class BioSimulator
 
         _window.Add(mainBox);
         _window.ShowAll();
+    }
+
+    private void Terminate(object o, EventArgs e)
+    {
+        Application.Quit();
     }
 }

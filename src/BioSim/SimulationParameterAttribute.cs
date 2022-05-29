@@ -3,10 +3,6 @@ namespace BioSim;
 [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property, AllowMultiple = false)]
 public class SimulationParameterAttribute : Attribute
 {
-    public bool Include
-    {
-        get;
-    }
     public string Name
     {
         get;
@@ -15,7 +11,6 @@ public class SimulationParameterAttribute : Attribute
     public SimulationParameterAttribute(string name)
     {
         Name = name;
-        Include = false;
     }
 }
 

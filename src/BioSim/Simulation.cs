@@ -4,6 +4,7 @@ namespace BioSim;
 public class Simulation
 {
     private Map _simMap;
+    [ExcludeParameter]
     public Map SimMap
     {
         get => _simMap;
@@ -21,6 +22,7 @@ public class Simulation
     public int MinBirthAmount { get; set; }
     public int MaxBirthAmount { get; set; }
     private Random _rnd;
+    [ExcludeParameter]
     public Random RandomNumberGenerator
     {
         get
