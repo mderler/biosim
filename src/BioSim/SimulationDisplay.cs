@@ -19,12 +19,15 @@ class SimulationDisplay : VBox
         PackStart(taskBar, false, false, 0);
 
         _simulationItems = new VBox();
-        PackStart(_simulationItems, false, false, 0);
+        PackStart(_simulationItems, true, true, 0);
     }
 
     // add a Simulation to the list
     public void AddSimulationItem(SimulationItem item)
     {
+        this.Remove(_simulationItems);
         _simulationItems.PackStart(item, false, false, 0);
+        _simulationItems.PackStart(new Label("asd"), false, false, 0);
+        PackStart(_simulationItems, true, true, 0);
     }
 }

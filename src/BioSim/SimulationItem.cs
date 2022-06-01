@@ -10,7 +10,7 @@ class SimulationItem : VBox
     private bool _running = true;
 
     // constructor
-    public SimulationItem(Simulation simulation)
+    public SimulationItem(Simulation simulation, string name)
     {
         this.simulation = simulation;
 
@@ -21,6 +21,7 @@ class SimulationItem : VBox
         _hButtonBox = new HButtonBox();
         _hButtonBox.Add(startStopButton);
 
+        Add(new Label(name));
         Add(_hButtonBox);
     }
 

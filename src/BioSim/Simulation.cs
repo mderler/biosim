@@ -47,7 +47,7 @@ public class Simulation
     private int _currentGeneration = 0;
 
     // constructor
-    public Simulation() { }
+    public Simulation() { SimEnv = new SimulationEnviroment(); }
 
     // constructor
     public Simulation(Model modelTemplate,

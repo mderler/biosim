@@ -47,6 +47,7 @@ class NewSimWindow : Window
         _settings.Add("mutate_chance", null);
         _settings.Add("mutate_strength", null);
         _settings.Add("inner_count", null);
+        _settings.Add("name", null);
 
         foreach (var item in _settings.Keys)
         {
@@ -131,7 +132,6 @@ class NewSimWindow : Window
             return;
         }
         map = new Map(_settings["map_path"].Text);
-        _sim.SimMap = map;
         if (!float.TryParse(_settings["mutate_chance"].Text, out fval))
         {
             return;
@@ -148,8 +148,12 @@ class NewSimWindow : Window
         }
         model.InnerCount = val;
 
-        _sim.RandomNumberGenerator = rnd;
+
+        _sim.SimMap = map;
         model.RNG = rnd;
+        _sim.ModelTemplate = model;
+        _sim.RandomNumberGenerator = rnd;
+        _display.AddSimulationItem(new SimulationItem(_sim, _settings["name"].Text));
         Destroy();
     }
 }

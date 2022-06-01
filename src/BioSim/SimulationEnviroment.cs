@@ -28,6 +28,12 @@ public class SimulationEnviroment
         Dits = new List<Dit>();
     }
 
+    // constructor
+    public SimulationEnviroment()
+    {
+        Dits = new List<Dit>();
+    }
+
     // try adding amount dits
     public bool TryAddRandomDits(int amount, Model model)
     {
