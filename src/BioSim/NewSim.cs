@@ -46,6 +46,7 @@ class NewSimWindow : Window
         _settings.Add("seed", null);
         _settings.Add("mutate_chance", null);
         _settings.Add("mutate_strength", null);
+        _settings.Add("inner_count", null);
 
         foreach (var item in _settings.Keys)
         {
@@ -93,35 +94,60 @@ class NewSimWindow : Window
         Map map;
         Random rnd;
         SLLModel model = new SLLModel();
-        bool noerror = true;
         int val;
         float fval;
-        noerror |= int.TryParse(_settings["min_birth_amount"].Text, out val);
-        _sim.MinBirthAmount = val;
-        noerror |= int.TryParse(_settings["max_birth_amount"].Text, out val);
-        _sim.MaxBirthAmount = val;
-        noerror |= int.TryParse(_settings["initial_population"].Text, out val);
-        _sim.InitialPopulation = val;
-        noerror |= int.TryParse(_settings["steps"].Text, out val);
-        _sim.Steps = val;
-        noerror |= int.TryParse(_settings["generations"].Text, out val);
-        _sim.Generations = val;
-        noerror |= int.TryParse(_settings["seed"].Text, out val);
-        rnd = new Random(val);
-        noerror |= File.Exists(_settings["map_path"].Text);
-        if (noerror)
-        {
-            map = new Map(_settings["map_path"].Text);
-            _sim.SimMap = map;
-        }
-        noerror |= float.TryParse(_settings["mutate_chance"].Text, out fval);
-        model.MutateChance = fval;
-        noerror |= float.TryParse(_settings["mutate_strength"].Text, out fval);
-        model.MutateStrength = fval;
-        if (!noerror)
+        if (!int.TryParse(_settings["min_birth_amount"].Text, out val))
         {
             return;
         }
+        _sim.MinBirthAmount = val;
+        if (!int.TryParse(_settings["max_birth_amount"].Text, out val))
+        {
+            return;
+        }
+        _sim.MaxBirthAmount = val;
+        if (!int.TryParse(_settings["initial_population"].Text, out val))
+        {
+            return;
+        }
+        _sim.InitialPopulation = val;
+        if (!int.TryParse(_settings["steps"].Text, out val))
+        {
+            return;
+        }
+        _sim.Steps = val;
+        if (!int.TryParse(_settings["generations"].Text, out val))
+        {
+            return;
+        }
+        _sim.Generations = val;
+        if (!int.TryParse(_settings["seed"].Text, out val))
+        {
+            return;
+        }
+        rnd = new Random(val);
+        if (!File.Exists(_settings["map_path"].Text))
+        {
+            return;
+        }
+        map = new Map(_settings["map_path"].Text);
+        _sim.SimMap = map;
+        if (!float.TryParse(_settings["mutate_chance"].Text, out fval))
+        {
+            return;
+        }
+        model.MutateChance = fval;
+        if (!float.TryParse(_settings["mutate_strength"].Text, out fval))
+        {
+            return;
+        }
+        model.MutateStrength = fval;
+        if (!int.TryParse(_settings["inner_count"].Text, out val))
+        {
+            return;
+        }
+        model.InnerCount = val;
+
         _sim.RandomNumberGenerator = rnd;
         model.RNG = rnd;
         Destroy();
