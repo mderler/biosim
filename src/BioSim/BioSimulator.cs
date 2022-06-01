@@ -12,7 +12,11 @@ public class BioSimulator
         get;
         private set;
     }
-    private FunctionFactory _factory;
+    public FunctionFactory IOFactory
+    {
+        get;
+        private set;
+    }
     private Dictionary<string, Command> _commands;
 
     public bool Running
@@ -25,13 +29,13 @@ public class BioSimulator
         Running = true;
         Simulations = new Dictionary<string, Simulation>();
         RunningSimulations = new Dictionary<string, Simulation>();
-        _factory = new FunctionFactory();
-        _factory.RegisterIOFunction("near to east", InputFunctions.NearToEast);
-        _factory.RegisterIOFunction("near to south", InputFunctions.NearToSouth);
-        _factory.RegisterIOFunction("move east", OutputFunctions.MoveEast);
-        _factory.RegisterIOFunction("move west", OutputFunctions.MoveWest);
-        _factory.RegisterIOFunction("move north", OutputFunctions.MoveNorth);
-        _factory.RegisterIOFunction("move south", OutputFunctions.MoveSouth);
+        IOFactory = new FunctionFactory();
+        IOFactory.RegisterIOFunction("near to east", InputFunctions.NearToEast);
+        IOFactory.RegisterIOFunction("near to south", InputFunctions.NearToSouth);
+        IOFactory.RegisterIOFunction("move east", OutputFunctions.MoveEast);
+        IOFactory.RegisterIOFunction("move west", OutputFunctions.MoveWest);
+        IOFactory.RegisterIOFunction("move north", OutputFunctions.MoveNorth);
+        IOFactory.RegisterIOFunction("move south", OutputFunctions.MoveSouth);
 
         _commands = new Dictionary<string, Command>();
         _commands.Add("create", new CreateCommand(this));
@@ -41,6 +45,8 @@ public class BioSimulator
         _commands.Add("delete", new DeleteCommand(this));
         _commands.Add("show", new ShowCommand(this));
         _commands.Add("template", new CreateTemplateCommand(this));
+        _commands.Add("export", new ExportStateCommand(this));
+        _commands.Add("import", new ImportStateCommand(this));
     }
 
     public void Run()
@@ -62,11 +68,12 @@ public class BioSimulator
             {
                 args[i - 1] = tmp[i];
             }
-            if (!_commands.ContainsKey(command))
+
+            string output = $"the command does not exist ({command})";
+            if (_commands.ContainsKey(command))
             {
-                Console.Write($"the command does not exist {command}");
+                output = _commands[command].RunCommand(args);
             }
-            string output = _commands[command].RunCommand(args);
 
             Console.WriteLine(output);
         }

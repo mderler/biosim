@@ -65,6 +65,8 @@ public class Simulation
         ModelTemplate = modelTemplate;
         InputFunctions = inputFunctions;
         OutputFunctions = outputFunctions;
+        Generations = generations;
+        Steps = steps;
         _simMap = simMap;
     }
 

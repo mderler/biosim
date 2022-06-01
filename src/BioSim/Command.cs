@@ -14,7 +14,7 @@ public abstract class Command
     {
         if (args.Length < _minArgs)
         {
-            return $"{_minArgs - args.Length} args are missing";
+            return $"{_minArgs - args.Length} argument(s) are missing";
         }
         foreach (var item in args)
         {
