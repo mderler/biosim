@@ -4,6 +4,7 @@ namespace BioSim;
 
 public class Program
 {
+    // entry point
     public static void Main()
     {
         Application.Init();

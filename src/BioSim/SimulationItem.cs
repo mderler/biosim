@@ -2,12 +2,14 @@ using Gtk;
 
 namespace BioSim;
 
+// holds a Simulation and display it as GUI
 class SimulationItem : VBox
 {
     public readonly Simulation simulation;
     private HButtonBox _hButtonBox;
     private bool _running = true;
 
+    // constructor
     public SimulationItem(Simulation simulation)
     {
         this.simulation = simulation;
@@ -21,6 +23,7 @@ class SimulationItem : VBox
 
         Add(_hButtonBox);
     }
+
 
     public void UpdateSimulation()
     {

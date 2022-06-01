@@ -1,5 +1,6 @@
 namespace BioSim;
 
+// holds map and dits
 public class SimulationEnviroment
 {
     public Map SimMap { get; set; }
@@ -20,13 +21,14 @@ public class SimulationEnviroment
         set { _rnd = value; }
     }
 
+    // constructor
     public SimulationEnviroment(Map simMap)
     {
         SimMap = simMap;
         Dits = new List<Dit>();
     }
 
-
+    // try adding amount dits
     public bool TryAddRandomDits(int amount, Model model)
     {
         List<(int, int)> validPositions = new List<(int, int)>();
@@ -59,6 +61,7 @@ public class SimulationEnviroment
         return empty;
     }
 
+    // try add amount dits with specific model
     public bool TryAddRandomDits(List<(int amount, Model model)> toAdd)
     {
         List<(int, int)> validPositions = new List<(int, int)>();
@@ -102,6 +105,7 @@ public class SimulationEnviroment
         return empty;
     }
 
+    // try move to new position
     public bool TryMove(Dit dit, (int x, int y) newPosition)
     {
         if (newPosition.x >= 0 && newPosition.x < SimMap.Width &&
@@ -125,6 +129,7 @@ public class SimulationEnviroment
         return false;
     }
 
+    // kill dits and create new ones
     public void KillAndCreateDits(int minBirthAmount, int maxBirthAmount)
     {
         List<Dit> oldDits = Dits.FindAll((Dit dit) => SimMap.GetSpot(dit.position) == Map.CellType.survive);
@@ -142,6 +147,7 @@ public class SimulationEnviroment
         TryAddRandomDits(toAdd);
     }
 
+    // get map and dit data
     public byte[] ReadData()
     {
         byte[] data = new byte[SimMap.RawData.Length];

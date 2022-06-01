@@ -1,10 +1,10 @@
 namespace BioSim;
 
-[IncludeAllAsParameters]
+// where it all comes together
+// simulate class
 public class Simulation
 {
     private Map _simMap;
-    [ExcludeParameter]
     public Map SimMap
     {
         get => _simMap;
@@ -22,7 +22,6 @@ public class Simulation
     public int MinBirthAmount { get; set; }
     public int MaxBirthAmount { get; set; }
     private Random _rnd;
-    [ExcludeParameter]
     public Random RandomNumberGenerator
     {
         get
@@ -42,14 +41,15 @@ public class Simulation
         }
     }
     public Model ModelTemplate { get; set; }
-    [ExcludeParameter]
     public SimulationEnviroment SimEnv { get; private set; }
 
     private int _currentStep = 0;
     private int _currentGeneration = 0;
 
+    // constructor
     public Simulation() { }
 
+    // constructor
     public Simulation(Model modelTemplate,
                       InputFunction[] inputFunctions,
                       OutputFunction[] outputFunctions,
@@ -68,12 +68,14 @@ public class Simulation
         _simMap = simMap;
     }
 
+    // setup the simulation
     public void Setup()
     {
         SimEnv = new SimulationEnviroment(_simMap);
         SimEnv.TryAddRandomDits(InitialPopulation, ModelTemplate);
     }
 
+    // update one iterarion
     public bool Update()
     {
         if (_currentGeneration >= Generations)
@@ -99,6 +101,7 @@ public class Simulation
         return true;
     }
 
+    // do one step
     private void DoStep()
     {
         float[] inputs = new float[InputFunctions.Length];
@@ -119,16 +122,19 @@ public class Simulation
         }
     }
 
+    // do a generation
     private void DoGeneration()
     {
         SimEnv.KillAndCreateDits(MinBirthAmount, MaxBirthAmount);
     }
 
+    // saves the state of the simulation
     public void SaveState()
     {
 
     }
 
+    // loads the state of the simulation
     public void LoadState()
     {
 

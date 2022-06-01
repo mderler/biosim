@@ -1,5 +1,6 @@
 namespace BioSim;
 
+// one model
 public class SLLModel : Model
 {
     public int InputCount { get; set; }
@@ -8,6 +9,7 @@ public class SLLModel : Model
     private int _connectionCount;
     private List<(int src, int dst, float wht, bool act)> _connections;
 
+    // get connections
     public (int src, int dst, float wht, bool act)[] Connections
     {
         get { return _connections.ToArray(); }
@@ -19,6 +21,7 @@ public class SLLModel : Model
         }
     }
 
+    // get connection count
     public int ConnectionCount
     {
         get => _connectionCount;
@@ -37,6 +40,7 @@ public class SLLModel : Model
         }
     }
 
+    // constructor
     public SLLModel(float mutateChance, float mutateStrength, Random rng) :
         base(mutateChance, mutateStrength, rng)
     {
@@ -44,6 +48,7 @@ public class SLLModel : Model
         _connections = new List<(int, int, float, bool)>();
     }
 
+    // constructor
     public SLLModel(float mutateChance, float mutateStrength) :
         base(mutateChance, mutateStrength)
     {
@@ -51,12 +56,14 @@ public class SLLModel : Model
         _connections = new List<(int, int, float, bool)>();
     }
 
+    // constructor
     public SLLModel()
     {
         _connectionCount = 0;
         _connections = new List<(int, int, float, bool)>();
     }
 
+    // get output out of input
     override public bool[] GetOutput(float[] input)
     {
         bool[] output = new bool[OutputCount];
@@ -81,6 +88,7 @@ public class SLLModel : Model
         return output;
     }
 
+    // randomize connections and weights
     override public void Randomize()
     {
         for (int i = 0; i < _connectionCount; i++)
@@ -108,6 +116,7 @@ public class SLLModel : Model
         CleanModel();
     }
 
+    // change connections or weights
     override public void Mutate()
     {
         if (RNG.NextSingle() < MutateChance)
@@ -220,6 +229,7 @@ public class SLLModel : Model
         }
     }
 
+    // return copy of the model
     public override Model Copy()
     {
         SLLModel model = new SLLModel(this.MutateChance, this.MutateStrength, this.RNG)

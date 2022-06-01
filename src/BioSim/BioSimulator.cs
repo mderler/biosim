@@ -2,6 +2,7 @@ using Gtk;
 
 namespace BioSim;
 
+// main Class for GUI
 class BioSimulator
 {
     private const int DEFAULT_WIDTH = 1260;
@@ -10,6 +11,7 @@ class BioSimulator
     private Window _window;
     private readonly FunctionFactory _simulationFactory;
 
+    // constructor
     public BioSimulator()
     {
         _simulationFactory = new FunctionFactory();
@@ -40,6 +42,7 @@ class BioSimulator
         _window.ShowAll();
     }
 
+    // Quit Application
     private void Terminate(object o, EventArgs e)
     {
         Application.Quit();

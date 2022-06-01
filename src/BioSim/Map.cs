@@ -2,6 +2,7 @@ using ImageMagick;
 
 namespace BioSim;
 
+// stores the Map data
 public class Map
 {
     public enum CellType
@@ -25,6 +26,7 @@ public class Map
     public int Width { get; private set; }
     public int Height { get; private set; }
 
+    // constructor
     public Map(string path)
     {
         MagickImage image = new MagickImage(path);
@@ -37,6 +39,7 @@ public class Map
         Interpetrate(image);
     }
 
+    // constructor
     public Map(MagickImage image)
     {
         Width = image.Width;
@@ -48,15 +51,7 @@ public class Map
         Interpetrate(image);
     }
 
-    // TODO: finish this method
-    public void ReadMapping(string path)
-    {
-        StreamReader sr = new StreamReader(path);
-        string text = sr.ReadToEnd();
-
-        string[] data = text.Split(',');
-    }
-
+    // take image and convert it to a map
     private void Interpetrate(MagickImage image)
     {
         byte[] data = image.GetPixels().ToByteArray(0, 0, Width, Height, "RGB");
@@ -97,16 +92,19 @@ public class Map
         }
     }
 
+    // get cell at coordinates
     public CellType GetSpot(int x, int y)
     {
         return _mapData[y][x];
     }
 
+    // get cell at coordinates
     public CellType GetSpot((int x, int y) position)
     {
         return _mapData[position.y][position.x];
     }
 
+    // count of free spaces
     public int FreeSpaceCount
     {
         get
