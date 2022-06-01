@@ -8,12 +8,50 @@ public class CreateCommand : Command
 
     protected override string Run(string[] args)
     {
-        if (!File.Exists(args[0]))
+        if (!File.Exists(args[1]))
         {
-            return $"this file does not exist: {args[0]}";
+            return $"this file does not exist: {args[1]}";
         }
+        string jsonString = File.ReadAllText(args[1]);
+
+        Simulation sim = new Simulation();
+        SimulationSettings settings = JsonSerializer.Deserialize<SimulationSettings>(jsonString);
+        if (settings == null)
+        {
+            return "something went wrong reading simulation settings";
+        }
+        if (settings.version != ProgramVersion.version)
+        {
+            return "the setting version does not match";
+        }
+
+        Map map = new Map(settings.mapPath);
+        List<InputFunction> inputFunctions = new List<InputFunction>();
+        List<OutputFunction> outputFunctions = new List<OutputFunction>();
+
+        foreach (var item in settings.inputFunctions)
+        {
+            if (!_simulator.IOFactory.RegisterdInputFunctions.ContainsKey(item))
+            {
+                return $"input function ({item}) does not exist";
+            }
+
+            inputFunctions.Add(_simulator.IOFactory.RegisterdInputFunctions[item]);
+        }
+
+        foreach (var item in settings.outputFunctions)
+        {
+            if (!_simulator.IOFactory.RegisterdOutputFunctions.ContainsKey(item))
+            {
+                return $"output function ({item}) does not exist";
+            }
+
+            outputFunctions.Add(_simulator.IOFactory.RegisterdOutputFunctions[item]);
+        }
+
         return "";
     }
+
 }
 
 public class QuitCommand : Command
@@ -73,7 +111,9 @@ public class DeleteCommand : Command
         }
         if (args.Contains("save"))
         {
-            // save
+            Simulation sim = _simulator.Simulations[args[0]];
+            string jsonString = JsonSerializer.Serialize<Simulation>(sim);
+            File.WriteAllText($"../../saves/{args[0]}.json", jsonString);
         }
         _simulator.Simulations.Remove(args[0]);
         return "";
@@ -115,14 +155,14 @@ public class CreateTemplateCommand : Command
         {
             return $"{args[0]} is a directory not a file";
         }
-        File.Copy(Resource.CombinePath("template.json"), args[0]);
+        File.Copy(JsonSerializer.Serialize<SimulationSettings>(new SimulationSettings()), args[0]);
         return "";
     }
 }
 
-public class SaveStateCommand : Command
+public class ExportStateCommand : Command
 {
-    public SaveStateCommand(BioSimulator simulator) : base(simulator)
+    public ExportStateCommand(BioSimulator simulator) : base(simulator)
     {
         _minArgs = 2;
     }
@@ -147,7 +187,37 @@ public class SaveStateCommand : Command
             return $"{args[1]} is a directory, not a file";
         }
 
-        // JsonSerializer.Serialize(args[1], _simulator.Simulations[args[1]], typeof(Simulation));
+        string jsonString = JsonSerializer.Serialize(_simulator.Simulations[args[1]]);
+        File.WriteAllText(args[1], jsonString);
+
+        return "";
+    }
+}
+
+public class ImportStateCommand : Command
+{
+    public ImportStateCommand(BioSimulator simulator) : base(simulator)
+    {
+        _minArgs = 2;
+    }
+
+    protected override string Run(string[] args)
+    {
+        if (!File.Exists(args[1]))
+        {
+            return $"the file does not exist {args[1]}";
+        }
+
+        string jsonString = File.ReadAllText(args[1]);
+        Simulation sim = JsonSerializer.Deserialize<Simulation>(jsonString);
+
+        if (sim == null)
+        {
+            return $"something went wrong importing the simulation";
+        }
+
+        _simulator.Simulations.Add(args[0], sim);
+
         return "";
     }
 }
