@@ -7,9 +7,7 @@ public class Program
     // entry point
     public static void Main()
     {
-        Application.Init();
-        BioSimulator gui = new BioSimulator();
-        // gui.ImageTest();
-        Application.Run();
+        BioSimulator simulator = new BioSimulator();
+        simulator.Run();
     }
 }

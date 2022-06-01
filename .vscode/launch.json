@@ -12,7 +12,7 @@
             "program": "${workspaceFolder}/src/BioSim/bin/Debug/net6.0/BioSim.dll",
             "args": [],
             "cwd": "${workspaceFolder}/src/BioSim",
-            "console": "internalConsole",
+            "console": "externalTerminal",
             "stopAtEntry": false
         },
         {
