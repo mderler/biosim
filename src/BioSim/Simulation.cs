@@ -43,11 +43,24 @@ public class Simulation
     public Model ModelTemplate { get; set; }
     public SimulationEnviroment SimEnv { get; private set; }
 
-    private int _currentStep = 0;
-    private int _currentGeneration = 0;
+    public int CurrentStep
+    {
+        get;
+        private set;
+    }
+    public int CurrentGeneration
+    {
+        get;
+        private set;
+    }
 
     // constructor
-    public Simulation() { SimEnv = new SimulationEnviroment(); }
+    public Simulation()
+    {
+        SimEnv = new SimulationEnviroment();
+        CurrentStep = 0;
+        CurrentGeneration = 0;
+    }
 
     // constructor
     public Simulation(Model modelTemplate,
@@ -68,6 +81,8 @@ public class Simulation
         Generations = generations;
         Steps = steps;
         _simMap = simMap;
+        CurrentStep = 0;
+        CurrentGeneration = 0;
     }
 
     // setup the simulation
@@ -80,24 +95,24 @@ public class Simulation
     // update one iterarion
     public bool Update()
     {
-        if (_currentGeneration >= Generations)
+        if (CurrentGeneration >= Generations)
         {
             return false;
         }
-        if (_currentStep < Steps)
+        if (CurrentStep < Steps)
         {
             DoStep();
-            _currentStep++;
+            CurrentStep++;
         }
-        if (_currentStep >= Steps)
+        if (CurrentStep >= Steps)
         {
             DoGeneration();
             if (SimEnv.Dits.Count == 0)
             {
                 return false;
             }
-            _currentStep = 0;
-            _currentGeneration++;
+            CurrentStep = 0;
+            CurrentGeneration++;
         }
 
         return true;

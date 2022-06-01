@@ -4,7 +4,7 @@ namespace BioSim;
 
 public class CreateCommand : Command
 {
-    public CreateCommand(BioSimulator simulator) : base(simulator) { _minArgs = 1; }
+    public CreateCommand(BioSimulator simulator) : base(simulator) { _minArgs = 2; }
 
     protected override string Run(string[] args)
     {
@@ -25,7 +25,11 @@ public class CreateCommand : Command
             return "the setting version does not match";
         }
 
+        Random rnd = new Random(settings.seed);
         Map map = new Map(settings.mapPath);
+        SLLModel model = new SLLModel(settings.mutateChance, settings.mutateStrength, rnd);
+        model.InnerCount = settings.innerCount;
+
         List<InputFunction> inputFunctions = new List<InputFunction>();
         List<OutputFunction> outputFunctions = new List<OutputFunction>();
 
@@ -49,6 +53,20 @@ public class CreateCommand : Command
             outputFunctions.Add(_simulator.IOFactory.RegisterdOutputFunctions[item]);
         }
 
+        sim.Generations = settings.generations;
+        sim.Steps = settings.steps;
+        sim.InitialPopulation = settings.initialPopulation;
+        sim.InputFunctions = inputFunctions.ToArray();
+        sim.OutputFunctions = outputFunctions.ToArray();
+        sim.MaxBirthAmount = settings.maxBirthAmount;
+        sim.MinBirthAmount = settings.minBirthAmount;
+        sim.SimMap = map;
+        sim.ModelTemplate = model;
+        sim.Setup();
+        sim.RandomNumberGenerator = rnd;
+
+        _simulator.Simulations.Add(args[0], sim);
+
         return "";
     }
 
@@ -60,6 +78,15 @@ public class QuitCommand : Command
 
     protected override string Run(string[] args)
     {
+        JsonSerializerOptions options = new JsonSerializerOptions();
+        options.IncludeFields = true;
+
+        foreach (var item in _simulator.Simulations)
+        {
+            string jsonString = JsonSerializer.Serialize(item.Value, options);
+            File.WriteAllText($"../../saves/{item.Key}.json", jsonString);
+        }
+
         _simulator.Running = false;
         return "";
     }
@@ -71,11 +98,14 @@ public class RunCommand : Command
 
     protected override string Run(string[] args)
     {
-        if (!_simulator.Simulations.ContainsKey(args[0]))
+        lock (_simulator.LockObj)
         {
-            return $"this simulation does not exists: {args[0]}";
+            if (!_simulator.Simulations.ContainsKey(args[0]))
+            {
+                return $"this simulation does not exists: {args[0]}";
+            }
+            _simulator.RunningSimulations.Add(args[0], _simulator.Simulations[args[0]]);
         }
-        _simulator.RunningSimulations.Add(args[0], _simulator.Simulations[args[0]]);
         return "";
     }
 }
@@ -129,9 +159,12 @@ public class ShowCommand : Command
         string output = "";
         foreach (var item in _simulator.Simulations)
         {
+            string state = _simulator.RunningSimulations.ContainsKey(item.Key) ? "running" : "halted";
             output += "---------\n";
             output += item.Key + "\n";
-            output += $"step: {3} generation: {0}\n";
+            output += $"step: {item.Value.CurrentStep}/{item.Value.Steps}; ";
+            output += $"generation: {item.Value.CurrentGeneration}/{item.Value.Generations}\n";
+            output += state;
         }
         return output;
     }
@@ -155,7 +188,13 @@ public class CreateTemplateCommand : Command
         {
             return $"{args[0]} is a directory not a file";
         }
-        File.Copy(JsonSerializer.Serialize<SimulationSettings>(new SimulationSettings()), args[0]);
+
+        SimulationSettings settings = new SimulationSettings();
+        JsonSerializerOptions options = new JsonSerializerOptions();
+        options.IncludeFields = true;
+        options.WriteIndented = true;
+
+        File.WriteAllText(args[0], JsonSerializer.Serialize<SimulationSettings>(settings, options));
         return "";
     }
 }
@@ -169,9 +208,9 @@ public class ExportStateCommand : Command
 
     protected override string Run(string[] args)
     {
-        if (_simulator.Simulations.ContainsKey(args[0]))
+        if (!_simulator.Simulations.ContainsKey(args[0]))
         {
-            return $"simulation {args[0]} not found";
+            return $"simulation ({args[0]}) not found";
         }
         char[] sarr = { '/', '\\' };
 
@@ -187,7 +226,10 @@ public class ExportStateCommand : Command
             return $"{args[1]} is a directory, not a file";
         }
 
-        string jsonString = JsonSerializer.Serialize(_simulator.Simulations[args[1]]);
+        JsonSerializerOptions options = new JsonSerializerOptions();
+        options.IncludeFields = true;
+
+        string jsonString = JsonSerializer.Serialize(_simulator.Simulations[args[0]], options);
         File.WriteAllText(args[1], jsonString);
 
         return "";
