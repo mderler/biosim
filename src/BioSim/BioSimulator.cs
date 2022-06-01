@@ -15,10 +15,9 @@ public class BioSimulator
     {
         get
         {
-            lock (LockObj)
-            {
-                return _runningSimulations;
-            }
+
+            return _runningSimulations;
+
         }
     }
     public FunctionFactory IOFactory
@@ -35,19 +34,16 @@ public class BioSimulator
     {
         get
         {
-            lock (LockObj)
-            {
-                return _running;
-            }
+            return _running;
         }
         set
         {
-            lock (LockObj)
-            {
-                _running = value;
-            }
+            _running = value;
         }
     }
+
+    private bool _update = true;
+
     public BioSimulator()
     {
         _running = true;
@@ -84,12 +80,15 @@ public class BioSimulator
             Simulations.Add(new FileInfo(item).Name, sim);
         }
         */
-        Thread updater = new Thread(UpdateSimulations);
-        updater.Start();
+
+
     }
 
-    public void Run()
+    public async void Run()
     {
+        Task simUpdate;
+        simUpdate = UpdateSimulations();
+
         while (Running)
         {
             Console.Write("-> ");
@@ -111,19 +110,23 @@ public class BioSimulator
             string output = $"the command does not exist ({command})";
             if (_commands.ContainsKey(command))
             {
-                output = _commands[command].RunCommand(args);
+                _update = false;
+                await simUpdate;
+                // output = _commands[command].RunCommand(args);
+                _update = true;
+                simUpdate = UpdateSimulations();
+
             }
 
             Console.WriteLine(output);
         }
     }
 
-    private void UpdateSimulations()
+    private async Task UpdateSimulations()
     {
-        // System.Console.WriteLine("asd");
-        while (Running)
+        await Task.Run(() =>
         {
-            lock (LockObj)
+            while (_update)
             {
                 var sims = RunningSimulations;
                 foreach (var item in sims)
@@ -134,7 +137,9 @@ public class BioSimulator
                         sims.Remove(item.Key);
                     }
                 }
+
             }
-        }
+            Console.WriteLine("finished");
+        });
     }
 }
