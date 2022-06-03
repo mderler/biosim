@@ -82,11 +82,11 @@ public class BioSimulator
 
     public void Run()
     {
-        string input = "";
-        MyClass myClass = new MyClass();
-        myClass.str = "";
-        Thread inputThread = new Thread(GetInput);
-        inputThread.Start(myClass);
+        StringHolder strHolder = new StringHolder();
+
+        Thread inputThread = StartInputThread(strHolder);
+
+        string input;
         bool writing = false;
 
         while (Running)
@@ -104,12 +104,11 @@ public class BioSimulator
                 continue;
             }
 
-            input = myClass.str;
+            input = strHolder.str;
 
             if (string.IsNullOrEmpty(input))
             {
-                inputThread = new Thread(GetInput);
-                inputThread.Start(myClass);
+                inputThread = StartInputThread(strHolder);
                 continue;
             }
 
@@ -130,15 +129,22 @@ public class BioSimulator
             Console.WriteLine(output);
             writing = false;
 
-            inputThread = new Thread(GetInput);
-            inputThread.Start(myClass);
+            inputThread = StartInputThread(strHolder);
         }
     }
 
     private void GetInput(object obj)
     {
-        var input = (MyClass)obj;
+        var input = (StringHolder)obj;
         input.str = Console.ReadLine();
+    }
+
+    private Thread StartInputThread(StringHolder strHolder)
+    {
+        Thread thread = new Thread(GetInput);
+        thread.Start(strHolder);
+
+        return thread;
     }
 
     private void UpdateSimulations()
@@ -154,7 +160,7 @@ public class BioSimulator
         }
     }
 
-    class MyClass
+    private class StringHolder
     {
         public string str;
     }
