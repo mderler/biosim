@@ -98,14 +98,12 @@ public class RunCommand : Command
 
     protected override string Run(string[] args)
     {
-        lock (_simulator.LockObj)
+        if (!_simulator.Simulations.ContainsKey(args[0]))
         {
-            if (!_simulator.Simulations.ContainsKey(args[0]))
-            {
-                return $"this simulation does not exists: {args[0]}";
-            }
-            _simulator.RunningSimulations.Add(args[0], _simulator.Simulations[args[0]]);
+            return $"this simulation does not exists: {args[0]}";
         }
+        _simulator.RunningSimulations.Add(args[0], _simulator.Simulations[args[0]]);
+
         return "";
     }
 }

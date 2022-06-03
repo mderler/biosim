@@ -27,8 +27,6 @@ public class BioSimulator
     }
     private Dictionary<string, Command> _commands;
 
-    public readonly object LockObj = new object();
-
     private bool _running;
     public bool Running
     {
@@ -41,8 +39,6 @@ public class BioSimulator
             _running = value;
         }
     }
-
-    private bool _update = true;
 
     public BioSimulator()
     {
@@ -84,18 +80,36 @@ public class BioSimulator
 
     }
 
-    public async void Run()
+    public void Run()
     {
-        Task simUpdate;
-        simUpdate = UpdateSimulations();
+        string input = "";
+        MyClass myClass = new MyClass();
+        myClass.str = "";
+        Thread inputThread = new Thread(GetInput);
+        inputThread.Start(myClass);
+        bool writing = false;
 
         while (Running)
         {
-            Console.Write("-> ");
-            string input = Console.ReadLine();
+            UpdateSimulations();
+
+            if (!writing)
+            {
+                Console.Write("-> ");
+            }
+
+            if (inputThread.IsAlive)
+            {
+                writing = true;
+                continue;
+            }
+
+            input = myClass.str;
 
             if (string.IsNullOrEmpty(input))
             {
+                inputThread = new Thread(GetInput);
+                inputThread.Start(myClass);
                 continue;
             }
 
@@ -110,36 +124,38 @@ public class BioSimulator
             string output = $"the command does not exist ({command})";
             if (_commands.ContainsKey(command))
             {
-                _update = false;
-                await simUpdate;
-                // output = _commands[command].RunCommand(args);
-                _update = true;
-                simUpdate = UpdateSimulations();
-
+                output = _commands[command].RunCommand(args);
             }
 
             Console.WriteLine(output);
+            writing = false;
+
+            inputThread = new Thread(GetInput);
+            inputThread.Start(myClass);
         }
     }
 
-    private async Task UpdateSimulations()
+    private void GetInput(object obj)
     {
-        await Task.Run(() =>
-        {
-            while (_update)
-            {
-                var sims = RunningSimulations;
-                foreach (var item in sims)
-                {
-                    bool running = item.Value.Update();
-                    if (!running)
-                    {
-                        sims.Remove(item.Key);
-                    }
-                }
+        var input = (MyClass)obj;
+        input.str = Console.ReadLine();
+    }
 
+    private void UpdateSimulations()
+    {
+        var sims = RunningSimulations;
+        foreach (var item in sims)
+        {
+            bool running = item.Value.Update();
+            if (!running)
+            {
+                sims.Remove(item.Key);
             }
-            Console.WriteLine("finished");
-        });
+        }
+    }
+
+    class MyClass
+    {
+        public string str;
     }
 }
