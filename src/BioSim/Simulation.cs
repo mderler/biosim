@@ -1,3 +1,5 @@
+using System.Text.Json.Serialization;
+
 namespace BioSim;
 
 // where it all comes together
@@ -52,6 +54,16 @@ public class Simulation
     {
         get;
         private set;
+    }
+
+    private SimulationSettings _settings;
+    public SimulationSettings Settings
+    {
+        get => _settings;
+        set
+        {
+            _settings = value;
+        }
     }
 
     // constructor
@@ -143,17 +155,5 @@ public class Simulation
     private void DoGeneration()
     {
         SimEnv.KillAndCreateDits(MinBirthAmount, MaxBirthAmount);
-    }
-
-    // saves the state of the simulation
-    public void SaveState()
-    {
-
-    }
-
-    // loads the state of the simulation
-    public void LoadState()
-    {
-
     }
 }

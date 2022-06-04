@@ -1,29 +1,22 @@
 namespace BioSim;
 
 // stores all IO Functions for Dits
-public class FunctionFactory
+public static class FunctionFactory
 {
-    private Dictionary<string, InputFunction> _registerdInputFunctions;
-    private Dictionary<string, OutputFunction> _registerdOutputFunctions;
+    private static Dictionary<string, InputFunction> _registerdInputFunctions = new Dictionary<string, InputFunction>();
+    private static Dictionary<string, OutputFunction> _registerdOutputFunctions = new Dictionary<string, OutputFunction>();
 
-    public Dictionary<string, InputFunction> RegisterdInputFunctions => _registerdInputFunctions;
-    public Dictionary<string, OutputFunction> RegisterdOutputFunctions => _registerdOutputFunctions;
-
-    // constructor
-    public FunctionFactory()
-    {
-        _registerdInputFunctions = new Dictionary<string, InputFunction>();
-        _registerdOutputFunctions = new Dictionary<string, OutputFunction>();
-    }
+    public static Dictionary<string, InputFunction> RegisterdInputFunctions => _registerdInputFunctions;
+    public static Dictionary<string, OutputFunction> RegisterdOutputFunctions => _registerdOutputFunctions;
 
     // Store Function
-    public void RegisterIOFunction(string name, InputFunction func)
+    public static void RegisterIOFunction(string name, InputFunction func)
     {
         _registerdInputFunctions.Add(name, func);
     }
 
     // Store Function
-    public void RegisterIOFunction(string name, OutputFunction func)
+    public static void RegisterIOFunction(string name, OutputFunction func)
     {
         _registerdOutputFunctions.Add(name, func);
     }

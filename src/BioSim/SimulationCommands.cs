@@ -15,6 +15,8 @@ public class CreateCommand : Command
         string jsonString = File.ReadAllText(args[1]);
 
         Simulation sim = new Simulation();
+        JsonSerializerOptions options = new JsonSerializerOptions();
+        options.Converters.Add(new SimulationSettingsConverter());
         SimulationSettings settings = JsonSerializer.Deserialize<SimulationSettings>(jsonString);
         if (settings == null)
         {
@@ -30,34 +32,11 @@ public class CreateCommand : Command
         SLLModel model = new SLLModel(settings.mutateChance, settings.mutateStrength, rnd);
         model.InnerCount = settings.innerCount;
 
-        List<InputFunction> inputFunctions = new List<InputFunction>();
-        List<OutputFunction> outputFunctions = new List<OutputFunction>();
-
-        foreach (var item in settings.inputFunctions)
-        {
-            if (!_simulator.IOFactory.RegisterdInputFunctions.ContainsKey(item))
-            {
-                return $"input function ({item}) does not exist";
-            }
-
-            inputFunctions.Add(_simulator.IOFactory.RegisterdInputFunctions[item]);
-        }
-
-        foreach (var item in settings.outputFunctions)
-        {
-            if (!_simulator.IOFactory.RegisterdOutputFunctions.ContainsKey(item))
-            {
-                return $"output function ({item}) does not exist";
-            }
-
-            outputFunctions.Add(_simulator.IOFactory.RegisterdOutputFunctions[item]);
-        }
-
         sim.Generations = settings.generations;
         sim.Steps = settings.steps;
         sim.InitialPopulation = settings.initialPopulation;
-        sim.InputFunctions = inputFunctions.ToArray();
-        sim.OutputFunctions = outputFunctions.ToArray();
+        sim.InputFunctions = settings.inputFunctions;
+        sim.OutputFunctions = settings.outputFunctions;
         sim.MaxBirthAmount = settings.maxBirthAmount;
         sim.MinBirthAmount = settings.minBirthAmount;
         sim.SimMap = map;
@@ -259,5 +238,29 @@ public class ImportStateCommand : Command
         _simulator.Simulations.Add(args[0], sim);
 
         return "";
+    }
+}
+
+public class FuncCommand : Command
+{
+    public FuncCommand(BioSimulator simulator) : base(simulator) { }
+
+    protected override string Run(string[] args)
+    {
+        string output = "";
+
+        output += "input functions:\n";
+        foreach (var item in FunctionFactory.RegisterdInputFunctions.Keys)
+        {
+            output += $"{item}\n";
+        }
+
+        output += "\noutput functions:\n";
+        foreach (var item in FunctionFactory.RegisterdOutputFunctions.Keys)
+        {
+            output += $"{item}\n";
+        }
+
+        return output;
     }
 }

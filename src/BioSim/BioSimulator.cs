@@ -20,11 +20,7 @@ public class BioSimulator
 
         }
     }
-    public FunctionFactory IOFactory
-    {
-        get;
-        private set;
-    }
+
     private Dictionary<string, Command> _commands;
 
     private bool _running;
@@ -45,13 +41,13 @@ public class BioSimulator
         _running = true;
         Simulations = new Dictionary<string, Simulation>();
         _runningSimulations = new Dictionary<string, Simulation>();
-        IOFactory = new FunctionFactory();
-        IOFactory.RegisterIOFunction("near to east", InputFunctions.NearToEast);
-        IOFactory.RegisterIOFunction("near to south", InputFunctions.NearToSouth);
-        IOFactory.RegisterIOFunction("move east", OutputFunctions.MoveEast);
-        IOFactory.RegisterIOFunction("move west", OutputFunctions.MoveWest);
-        IOFactory.RegisterIOFunction("move north", OutputFunctions.MoveNorth);
-        IOFactory.RegisterIOFunction("move south", OutputFunctions.MoveSouth);
+
+        FunctionFactory.RegisterIOFunction("near_to_east", InputFunctions.NearToEast);
+        FunctionFactory.RegisterIOFunction("near_to_south", InputFunctions.NearToSouth);
+        FunctionFactory.RegisterIOFunction("move_east", OutputFunctions.MoveEast);
+        FunctionFactory.RegisterIOFunction("move_west", OutputFunctions.MoveWest);
+        FunctionFactory.RegisterIOFunction("move_north", OutputFunctions.MoveNorth);
+        FunctionFactory.RegisterIOFunction("move_south", OutputFunctions.MoveSouth);
 
         _commands = new Dictionary<string, Command>();
         _commands.Add("create", new CreateCommand(this));
@@ -63,6 +59,7 @@ public class BioSimulator
         _commands.Add("template", new CreateTemplateCommand(this));
         _commands.Add("export", new ExportStateCommand(this));
         _commands.Add("import", new ImportStateCommand(this));
+        _commands.Add("funcs", new FuncCommand(this));
 
         // load sims
         JsonSerializerOptions options = new JsonSerializerOptions();
@@ -76,8 +73,6 @@ public class BioSimulator
             Simulations.Add(new FileInfo(item).Name, sim);
         }
         */
-
-
     }
 
     public void Run()
