@@ -10,37 +10,16 @@ public class BioSimulator
         private set;
     }
 
-    private Dictionary<string, Simulation> _runningSimulations;
-    public Dictionary<string, Simulation> RunningSimulations
-    {
-        get
-        {
-
-            return _runningSimulations;
-
-        }
-    }
-
     private Dictionary<string, Command> _commands;
 
-    private bool _running;
-    public bool Running
-    {
-        get
-        {
-            return _running;
-        }
-        set
-        {
-            _running = value;
-        }
-    }
+    public bool Running { get; set; }
+    public bool AutoSave { get; set; }
 
     public BioSimulator()
     {
-        _running = true;
+        Running = true;
+        AutoSave = true;
         Simulations = new Dictionary<string, Simulation>();
-        _runningSimulations = new Dictionary<string, Simulation>();
 
         FunctionFactory.RegisterIOFunction("near_to_east", InputFunctions.NearToEast);
         FunctionFactory.RegisterIOFunction("near_to_south", InputFunctions.NearToSouth);
@@ -60,6 +39,7 @@ public class BioSimulator
         _commands.Add("export", new ExportStateCommand(this));
         _commands.Add("import", new ImportStateCommand(this));
         _commands.Add("funcs", new FuncCommand(this));
+        _commands.Add("autosave", new AutoSaveCommand(this));
 
         // load sims
         JsonSerializerOptions options = new JsonSerializerOptions();
@@ -139,19 +119,24 @@ public class BioSimulator
         Thread thread = new Thread(GetInput);
         thread.Start(strHolder);
 
+        _runningSims.Clear();
+        foreach (var item in Simulations)
+        {
+            if (item.Value.CurrentState == SimulationState.Running)
+            {
+                _runningSims.Add(item.Value);
+            }
+        }
+
         return thread;
     }
 
+    List<Simulation> _runningSims = new List<Simulation>();
     private void UpdateSimulations()
     {
-        var sims = RunningSimulations;
-        foreach (var item in sims)
+        foreach (var item in _runningSims)
         {
-            bool running = item.Value.Update();
-            if (!running)
-            {
-                sims.Remove(item.Key);
-            }
+            item.Update();
         }
     }
 

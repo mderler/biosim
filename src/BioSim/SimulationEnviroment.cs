@@ -4,7 +4,7 @@ namespace BioSim;
 public class SimulationEnviroment
 {
     public Map SimMap { get; set; }
-    public List<Dit> Dits { get; private set; }
+    public List<Dit> Dits { get; set; }
     private Random _rnd;
 
     public Random RandomNumberGenerator
@@ -119,7 +119,7 @@ public class SimulationEnviroment
         {
             foreach (var item in Dits)
             {
-                if (item.position == newPosition)
+                if (item.Position == newPosition)
                 {
                     return false;
                 }
@@ -128,7 +128,7 @@ public class SimulationEnviroment
             Map.CellType cell = SimMap.GetSpot(newPosition);
             if ((cell == Map.CellType.survive || cell == Map.CellType.space))
             {
-                dit.position = newPosition;
+                dit.Position = newPosition;
                 return true;
             }
         }
@@ -138,7 +138,7 @@ public class SimulationEnviroment
     // kill dits and create new ones
     public void KillAndCreateDits(int minBirthAmount, int maxBirthAmount)
     {
-        List<Dit> oldDits = Dits.FindAll((Dit dit) => SimMap.GetSpot(dit.position) == Map.CellType.survive);
+        List<Dit> oldDits = Dits.FindAll((Dit dit) => SimMap.GetSpot(dit.Position) == Map.CellType.survive);
         List<(int, Model)> toAdd = new List<(int, Model)>();
         Dits.Clear();
 
@@ -146,7 +146,7 @@ public class SimulationEnviroment
         {
             int amount = RandomNumberGenerator.Next(minBirthAmount, maxBirthAmount + 1);
             int index = RandomNumberGenerator.Next(oldDits.Count);
-            toAdd.Add((amount, oldDits[index].model));
+            toAdd.Add((amount, oldDits[index].Model));
             oldDits.RemoveAt(index);
         }
 
@@ -161,7 +161,7 @@ public class SimulationEnviroment
 
         foreach (var item in Dits)
         {
-            int index = (item.position.x + item.position.y * SimMap.Width) * 3;
+            int index = (item.Position.x + item.Position.y * SimMap.Width) * 3;
             data[index] = 255;
             data[index + 1] = 0;
             data[index + 2] = 0;

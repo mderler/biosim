@@ -14,7 +14,6 @@ public class CreateCommand : Command
         }
         string jsonString = File.ReadAllText(args[1]);
 
-        Simulation sim = new Simulation();
         JsonSerializerOptions options = new JsonSerializerOptions();
         options.Converters.Add(new SimulationSettingsConverter());
         SimulationSettings settings = JsonSerializer.Deserialize<SimulationSettings>(jsonString);
@@ -27,22 +26,12 @@ public class CreateCommand : Command
             return "the setting version does not match";
         }
 
-        Random rnd = new Random(settings.seed);
-        Map map = new Map(settings.mapPath);
-        SLLModel model = new SLLModel(settings.mutateChance, settings.mutateStrength, rnd);
+        SLLModel model = new SLLModel(settings.mutateChance, settings.mutateStrength);
         model.InnerCount = settings.innerCount;
 
-        sim.Generations = settings.generations;
-        sim.Steps = settings.steps;
-        sim.InitialPopulation = settings.initialPopulation;
-        sim.InputFunctions = settings.inputFunctions;
-        sim.OutputFunctions = settings.outputFunctions;
-        sim.MaxBirthAmount = settings.maxBirthAmount;
-        sim.MinBirthAmount = settings.minBirthAmount;
-        sim.SimMap = map;
-        sim.ModelTemplate = model;
+        Simulation sim = new Simulation(settings);
+
         sim.Setup();
-        sim.RandomNumberGenerator = rnd;
 
         _simulator.Simulations.Add(args[0], sim);
 
@@ -81,7 +70,7 @@ public class RunCommand : Command
         {
             return $"this simulation does not exists: {args[0]}";
         }
-        _simulator.RunningSimulations.Add(args[0], _simulator.Simulations[args[0]]);
+        _simulator.Simulations[args[0]].CurrentState = SimulationState.Running;
 
         return "";
     }
@@ -93,11 +82,11 @@ public class HaltCommand : Command
 
     protected override string Run(string[] args)
     {
-        if (!_simulator.RunningSimulations.ContainsKey(args[0]))
+        if (!_simulator.Simulations.ContainsKey(args[0]))
         {
             return $"this simulation does not exists: {args[0]}";
         }
-        _simulator.RunningSimulations.Remove(args[0]);
+        _simulator.Simulations[args[0]].CurrentState = SimulationState.Halted;
         return "";
     }
 }
@@ -111,10 +100,6 @@ public class DeleteCommand : Command
         if (!_simulator.Simulations.ContainsKey(args[0]))
         {
             return $"this simulation does not exists: {args[0]}";
-        }
-        if (_simulator.RunningSimulations.ContainsKey(args[0]))
-        {
-            _simulator.RunningSimulations.Remove(args[0]);
         }
         if (args.Contains("save"))
         {
@@ -136,11 +121,18 @@ public class ShowCommand : Command
         string output = "";
         foreach (var item in _simulator.Simulations)
         {
-            string state = _simulator.RunningSimulations.ContainsKey(item.Key) ? "running" : "halted";
+            string state = "";
+            switch (item.Value.CurrentState)
+            {
+                case SimulationState.Running: state = "running"; break;
+                case SimulationState.Halted: state = "halted"; break;
+                case SimulationState.Finished: state = "finished"; break;
+                case SimulationState.Extinct: state = "extinct"; break;
+            }
             output += "---------\n";
             output += item.Key + "\n";
-            output += $"step: {item.Value.CurrentStep}/{item.Value.Steps}; ";
-            output += $"generation: {item.Value.CurrentGeneration}/{item.Value.Generations}\n";
+            output += $"step: {item.Value.CurrentStep}/{item.Value.Settings.steps}; ";
+            output += $"generation: {item.Value.CurrentGeneration}/{item.Value.Settings.generations}\n";
             output += state;
         }
         return output;
@@ -204,9 +196,9 @@ public class ExportStateCommand : Command
         }
 
         JsonSerializerOptions options = new JsonSerializerOptions();
-        options.IncludeFields = true;
+        options.WriteIndented = true;
 
-        string jsonString = JsonSerializer.Serialize(_simulator.Simulations[args[0]], options);
+        string jsonString = JsonSerializer.Serialize<Simulation>(_simulator.Simulations[args[0]], options);
         File.WriteAllText(args[1], jsonString);
 
         return "";
@@ -259,6 +251,33 @@ public class FuncCommand : Command
         foreach (var item in FunctionFactory.RegisterdOutputFunctions.Keys)
         {
             output += $"{item}\n";
+        }
+
+        return output;
+    }
+}
+
+public class AutoSaveCommand : Command
+{
+    public AutoSaveCommand(BioSimulator simulator) : base(simulator)
+    {
+        _minArgs = 1;
+    }
+
+    protected override string Run(string[] args)
+    {
+        string output = "";
+
+        output = "the argument must ether be 'on' or 'off'";
+        if (args[0] == "on")
+        {
+            _simulator.AutoSave = true;
+            output = "autosave is now on";
+        }
+        if (args[0] == "off")
+        {
+            _simulator.AutoSave = false;
+            output = "autosave is now off";
         }
 
         return output;

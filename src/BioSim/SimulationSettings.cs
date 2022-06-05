@@ -10,9 +10,7 @@ public class SimulationSettings
     public int generations = 10;
     public int steps = 10;
     public int initialPopulation = 1000;
-    [JsonConverter(typeof(InputFunctionsConverter))]
     public InputFunction[] inputFunctions = { InputFunctions.NearToEast, InputFunctions.NearToSouth };
-    [JsonConverter(typeof(OutputFunctionsConverter))]
     public OutputFunction[] outputFunctions = { OutputFunctions.MoveEast, OutputFunctions.MoveNorth, OutputFunctions.MoveSouth, OutputFunctions.MoveWest };
     public int minBirthAmount = 1;
     public int maxBirthAmount = 2;
@@ -21,4 +19,5 @@ public class SimulationSettings
     public float mutateChance = 0.001f;
     public float mutateStrength = 0.001f;
     public int innerCount = 2;
+    public int connectionCount = 10;
 }

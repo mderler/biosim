@@ -5,12 +5,12 @@ namespace biosimtests;
 
 public class MapTest
 {
-    private const string _imageDir = "image.png";
+    private const string _imageDir = "../../../../../tmp/image.png";
 
     [Fact]
     public void TestConstuct()
     {
-        byte[] data = {255, 255, 255};
+        byte[] data = { 255, 255, 255 };
         TestDirHelper.CreateTestImage(data, 1, _imageDir);
         Map map = new Map(_imageDir);
     }
@@ -18,7 +18,7 @@ public class MapTest
     [Fact]
     public void TestDataPixel()
     {
-        byte[] data = {255, 255, 255};
+        byte[] data = { 255, 255, 255 };
         TestDirHelper.CreateTestImage(data, 1, _imageDir);
         Map map = new Map(_imageDir);
 
@@ -28,7 +28,7 @@ public class MapTest
     [Fact]
     public void TestData()
     {
-        byte[] data = 
+        byte[] data =
         {
               0,   0,   0,
             255, 255, 255,
@@ -56,7 +56,7 @@ public class MapTest
              37,  70,  80,
             221, 250, 230,
         };
-        
+
         Map.CellType[] expected =
         {
             Map.CellType.wall,
@@ -86,7 +86,7 @@ public class MapTest
             Map.CellType.space
         };
 
-        Map.CellType[] actual = new Map.CellType[5*5];
+        Map.CellType[] actual = new Map.CellType[5 * 5];
 
         TestDirHelper.CreateTestImage(data, 5, _imageDir);
         Map map = new Map(_imageDir);
@@ -95,7 +95,7 @@ public class MapTest
         {
             for (int x = 0; x < map.Width; x++)
             {
-                int i = x+y*map.Width;
+                int i = x + y * map.Width;
                 actual[i] = map.GetSpot(x, y);
             }
         }
@@ -108,7 +108,7 @@ public class MapTest
     {
         void CreateMap()
         {
-          new Map("");
+            new Map("");
         }
 
         Assert.ThrowsAny<Exception>(CreateMap);
@@ -117,7 +117,7 @@ public class MapTest
     [Fact]
     public void TestReadData()
     {
-        byte[] data = 
+        byte[] data =
         {
             255,255,255,
               0,255,  0,

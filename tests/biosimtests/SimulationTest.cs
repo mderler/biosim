@@ -8,44 +8,36 @@ namespace biosimtests;
 
 public class SimulationTest
 {
-    private const string _mapImagefn = "mapImgage.png";
+    private const string _mapImagefn = @"..\..\..\..\..\res\testres\small.png";
 
     [Fact]
     public void TestConstuct()
     {
-        Simulation simulation = new Simulation
-        (
-            new SLLModel(),
-            new InputFunction[0],
-            new OutputFunction[0],
-            new Map(_mapImagefn)
-        );
+        SimulationSettings settings = new SimulationSettings();
+        settings.mapPath = _mapImagefn;
+        Simulation simulation = new Simulation(settings);
     }
 
     [Fact]
     public void TestUpdate()
     {
-        byte[] data = { 0, 0, 0 };
-        TestDirHelper.CreateTestImage(data, 1, _mapImagefn);
+        const int generations = 6;
+        const int steps = 7;
 
-        const int generations = 50;
-        const int steps = 20;
-
-        Simulation simulation = new Simulation
-        (
-            new SLLModel(),
-            new InputFunction[0],
-            new OutputFunction[0],
-            new Map(_mapImagefn)
-        )
-        {
-            Generations = generations,
-            Steps = steps
-        };
+        SimulationSettings settings = new SimulationSettings();
+        settings.generations = generations;
+        settings.steps = steps;
+        settings.mapPath = _mapImagefn;
+        Simulation simulation = new Simulation(settings);
 
         for (int i = 0; i < generations * steps; i++)
         {
-            Assert.True(simulation.Update());
+            bool b = simulation.Update();
+            if (simulation.CurrentState == SimulationState.Extinct)
+            {
+                break;
+            }
+            Assert.True(b);
         }
 
         Assert.False(simulation.Update());
@@ -62,28 +54,22 @@ public class SimulationTest
 
         MagickImage image = new MagickImage(path);
 
-        const int connectionCount = 2;
-
-        SLLModel model = new SLLModel();
-        model.InputCount = 2;
-        model.InnerCount = 5;
-        model.OutputCount = 4;
-        model.ConnectionCount = connectionCount;
-        model.MutateChance = 0f;
-        model.MutateStrength = 0.2f;
-        Map simMap = new Map(path);
 
         InputFunction[] inputFunctions = { InputFunctions.NearToEast, InputFunctions.NearToSouth };
         OutputFunction[] outputFunctions = {OutputFunctions.MoveNorth, OutputFunctions.MoveSouth,
                                             OutputFunctions.MoveWest, OutputFunctions.MoveEast};
 
-        Simulation simulation = new Simulation(model, inputFunctions, outputFunctions, simMap);
-        simulation.InitialPopulation = 1000;
-        simulation.Generations = 50;
-        simulation.Steps = 260;
-        simulation.MinBirthAmount = 2;
-        simulation.MaxBirthAmount = 10;
-        simulation.RandomNumberGenerator = new Random(0);
+        SimulationSettings settings = new SimulationSettings();
+        settings.initialPopulation = 1000;
+        settings.generations = 20;
+        settings.steps = 100;
+        settings.minBirthAmount = 2;
+        settings.maxBirthAmount = 10;
+        settings.seed = 0;
+        settings.inputFunctions = inputFunctions;
+        settings.outputFunctions = outputFunctions;
+
+        Simulation simulation = new Simulation(settings);
 
         simulation.Setup();
 

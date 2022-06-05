@@ -8,12 +8,12 @@ public static class InputFunctions
     // return a high value whet a Dit is near to South
     public static float NearToSouth(Dit dit, Simulation simulation)
     {
-        return (float)dit.position.y / simulation.SimMap.Height;
+        return (float)dit.Position.y / simulation.SimMap.Height;
     }
 
     // return a high value when a Dit is near to East
     public static float NearToEast(Dit dit, Simulation simulation)
     {
-        return (float)dit.position.x / simulation.SimMap.Width;
+        return (float)dit.Position.x / simulation.SimMap.Width;
     }
 }

@@ -4,8 +4,10 @@ namespace BioSim;
 
 // where it all comes together
 // simulate class
+[JsonConverter(typeof(SimulationConverter))]
 public class Simulation
 {
+    public SimulationState CurrentState { get; set; }
     private Map _simMap;
     public Map SimMap
     {
@@ -16,13 +18,7 @@ public class Simulation
             SimEnv.SimMap = value;
         }
     }
-    public int Generations { get; set; }
-    public int Steps { get; set; }
-    public int InitialPopulation { get; set; }
-    public InputFunction[] InputFunctions { get; set; }
-    public OutputFunction[] OutputFunctions { get; set; }
-    public int MinBirthAmount { get; set; }
-    public int MaxBirthAmount { get; set; }
+
     private Random _rnd;
     public Random RandomNumberGenerator
     {
@@ -67,60 +63,44 @@ public class Simulation
     }
 
     // constructor
-    public Simulation()
+    public Simulation(SimulationSettings settings)
     {
-        SimEnv = new SimulationEnviroment();
-        CurrentStep = 0;
         CurrentGeneration = 0;
-    }
+        CurrentStep = 0;
+        _settings = settings;
+        ModelTemplate = new SLLModel(settings.mutateChance, settings.mutateStrength)
+        { InnerCount = settings.innerCount, ConnectionCount = settings.connectionCount };
 
-    // constructor
-    public Simulation(Model modelTemplate,
-                      InputFunction[] inputFunctions,
-                      OutputFunction[] outputFunctions,
-                      Map simMap,
-                      int minBirthAmount = 1,
-                      int maxBrithAmount = 2,
-                      int initialPopulation = 0,
-                      int steps = 0,
-                      int generations = 0)
-    {
-        MinBirthAmount = minBirthAmount;
-        MaxBirthAmount = maxBrithAmount;
-        ModelTemplate = modelTemplate;
-        InputFunctions = inputFunctions;
-        OutputFunctions = outputFunctions;
-        Generations = generations;
-        Steps = steps;
-        _simMap = simMap;
-        CurrentStep = 0;
-        CurrentGeneration = 0;
+        _simMap = new Map(settings.mapPath);
+        SimEnv = new SimulationEnviroment(_simMap);
+        RandomNumberGenerator = new Random(settings.seed);
     }
 
     // setup the simulation
     public void Setup()
     {
-        SimEnv = new SimulationEnviroment(_simMap);
-        SimEnv.TryAddRandomDits(InitialPopulation, ModelTemplate);
+        SimEnv.TryAddRandomDits(_settings.initialPopulation, ModelTemplate);
     }
 
     // update one iterarion
     public bool Update()
     {
-        if (CurrentGeneration >= Generations)
+        if (CurrentGeneration >= _settings.generations)
         {
+            CurrentState = SimulationState.Finished;
             return false;
         }
-        if (CurrentStep < Steps)
+        if (CurrentStep < _settings.steps)
         {
             DoStep();
             CurrentStep++;
         }
-        if (CurrentStep >= Steps)
+        if (CurrentStep >= _settings.steps)
         {
             DoGeneration();
             if (SimEnv.Dits.Count == 0)
             {
+                CurrentState = SimulationState.Extinct;
                 return false;
             }
             CurrentStep = 0;
@@ -133,19 +113,19 @@ public class Simulation
     // do one step
     private void DoStep()
     {
-        float[] inputs = new float[InputFunctions.Length];
+        float[] inputs = new float[_settings.inputFunctions.Length];
         foreach (var dit in SimEnv.Dits)
         {
             for (int i = 0; i < inputs.Length; i++)
             {
-                inputs[i] = InputFunctions[i](dit, this);
+                inputs[i] = _settings.inputFunctions[i](dit, this);
             }
-            bool[] outputs = dit.model.GetOutput(inputs);
+            bool[] outputs = dit.Model.GetOutput(inputs);
             for (int i = 0; i < outputs.Length; i++)
             {
                 if (outputs[i])
                 {
-                    OutputFunctions[i](in dit, this);
+                    _settings.outputFunctions[i](in dit, this);
                 }
             }
         }
@@ -154,6 +134,6 @@ public class Simulation
     // do a generation
     private void DoGeneration()
     {
-        SimEnv.KillAndCreateDits(MinBirthAmount, MaxBirthAmount);
+        SimEnv.KillAndCreateDits(_settings.minBirthAmount, _settings.maxBirthAmount);
     }
 }
