@@ -15,12 +15,17 @@ public class Simulation
         set
         {
             _simMap = value;
+            if (SimEnv == null)
+            {
+                SimEnv = new SimulationEnviroment(_simMap);
+                return;
+            }
             SimEnv.SimMap = value;
         }
     }
 
     private Random _rnd;
-    public Random RandomNumberGenerator
+    public Random RNG
     {
         get
         {
@@ -38,7 +43,21 @@ public class Simulation
             ModelTemplate.RNG = value;
         }
     }
-    public Model ModelTemplate { get; set; }
+    private SLLModel _modelTemplate;
+    public SLLModel ModelTemplate
+    {
+        get => _modelTemplate;
+        set
+        {
+            _modelTemplate = value;
+            foreach (var item in SimEnv.Dits)
+            {
+                var conns = item.Model.Connections;
+                item.Model = value.Copy();
+                item.Model.Connections = conns;
+            }
+        }
+    }
     public SimulationEnviroment SimEnv { get; private set; }
 
     public int CurrentStep
@@ -59,6 +78,13 @@ public class Simulation
         set
         {
             _settings = value;
+            ModelTemplate = new SLLModel(
+            _settings.mutateChance, _settings.mutateStrength, _settings.inputFunctions.Length,
+            _settings.innerCount, _settings.outputFunctions.Length, _settings.connectionCount, new Random(_settings.seed))
+            { InnerCount = _settings.innerCount, ConnectionCount = _settings.connectionCount };
+
+            SimMap = new Map(_settings.mapPath);
+            RNG = new Random(_settings.seed);
         }
     }
 
@@ -68,17 +94,14 @@ public class Simulation
         CurrentGeneration = 0;
         CurrentStep = 0;
         _settings = settings;
-        ModelTemplate = new SLLModel(settings.mutateChance, settings.mutateStrength)
+        _modelTemplate = new SLLModel(
+            settings.mutateChance, settings.mutateStrength, settings.inputFunctions.Length,
+            settings.innerCount, settings.outputFunctions.Length, settings.connectionCount, new Random(settings.seed))
         { InnerCount = settings.innerCount, ConnectionCount = settings.connectionCount };
 
-        _simMap = new Map(settings.mapPath);
-        SimEnv = new SimulationEnviroment(_simMap);
-        RandomNumberGenerator = new Random(settings.seed);
-    }
+        SimMap = new Map(settings.mapPath);
+        RNG = new Random(settings.seed);
 
-    // setup the simulation
-    public void Setup()
-    {
         SimEnv.TryAddRandomDits(_settings.initialPopulation, ModelTemplate);
     }
 

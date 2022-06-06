@@ -4,10 +4,10 @@ namespace BioSim;
 public class Dit
 {
     public (int x, int y) Position { get; set; }
-    public Model Model { get; set; }
+    public SLLModel Model { get; set; }
 
     // constructor
-    public Dit((int, int) position, Model model)
+    public Dit((int, int) position, SLLModel model)
     {
         this.Position = position;
         this.Model = model;

@@ -4,6 +4,7 @@ public abstract class Command
 {
     protected BioSimulator _simulator;
     protected uint _minArgs = 0;
+    protected List<string> _bannendWords = new List<string>();
     public Command(BioSimulator simulator)
     {
         _simulator = simulator;
@@ -21,6 +22,10 @@ public abstract class Command
             if (string.IsNullOrEmpty(item))
             {
                 return "the args must not be empty";
+            }
+            if (_bannendWords.Contains(item))
+            {
+                return $"the expression '{item}' is preserved";
             }
         }
 

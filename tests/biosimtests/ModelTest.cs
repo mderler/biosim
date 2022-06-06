@@ -9,7 +9,7 @@ public class ModelTest
     [Fact]
     public void TestConstuct()
     {
-        SLLModel model = new SLLModel();
+        SLLModel model = new SLLModel(2, 2, 1, 1, 1, 1, new Random());
     }
 
     [Fact]
@@ -20,13 +20,10 @@ public class ModelTest
         int outputCount = 20;
         int connectionsCount = 500;
 
-        SLLModel model = new SLLModel()
-        {
-            InnerCount = innerCount,
-            InputCount = inputCount,
-            OutputCount = outputCount,
-            ConnectionCount = connectionsCount
-        };
+        SLLModel model = new SLLModel(
+            1, 1, inputCount, innerCount,
+            outputCount, connectionsCount, new Random());
+
         model.Randomize();
 
         var connections = model.Connections;
@@ -34,16 +31,16 @@ public class ModelTest
         Assert.Equal(connections.Length, connectionsCount);
         Assert.Equal(connectionsCount, model.ConnectionCount);
 
-        for (int i = 0; i < connections.Length-1; i++)
+        for (int i = 0; i < connections.Length - 1; i++)
         {
-            Assert.True(connections[i].src <= connections[i+1].src);
+            Assert.True(connections[i].src <= connections[i + 1].src);
         }
 
         foreach (var item in connections)
         {
             Assert.True(item.wht >= -4f && item.wht <= 4f);
-            Assert.True(item.src < inputCount+innerCount);
-            Assert.True(item.dst < inputCount+innerCount+outputCount);
+            Assert.True(item.src < inputCount + innerCount);
+            Assert.True(item.dst < inputCount + innerCount + outputCount);
             Assert.True(item.dst >= inputCount);
         }
     }
@@ -58,16 +55,10 @@ public class ModelTest
         float mutateChance = 1f;
         float mutateStrength = 1f;
 
-        SLLModel model = new SLLModel()
-        {
-            InnerCount = innerCount,
-            InputCount = inputCount,
-            OutputCount = outputCount,
-            ConnectionCount = connectionsCount,
-            MutateChance = mutateChance,
-            MutateStrength = mutateStrength,
-            RNG = new Random(0)
-        };
+        SLLModel model = new SLLModel(
+            mutateChance, mutateStrength, inputCount,
+            innerCount, outputCount, connectionsCount, new Random(0));
+
 
         model.Randomize();
         var oldConnections = model.Connections;
@@ -82,16 +73,16 @@ public class ModelTest
         Assert.Equal(connections.Length, connectionsCount);
         Assert.Equal(connectionsCount, model.ConnectionCount);
 
-        for (int i = 0; i < connections.Length-1; i++)
+        for (int i = 0; i < connections.Length - 1; i++)
         {
-            Assert.True(connections[i].src <= connections[i+1].src);
+            Assert.True(connections[i].src <= connections[i + 1].src);
         }
 
         foreach (var item in connections)
         {
             Assert.True(item.wht >= -4f && item.wht <= 4f);
-            Assert.True(item.src < inputCount+innerCount);
-            Assert.True(item.dst < inputCount+innerCount+outputCount);
+            Assert.True(item.src < inputCount + innerCount);
+            Assert.True(item.dst < inputCount + innerCount + outputCount);
             Assert.True(item.dst > inputCount);
         }
     }
@@ -157,12 +148,9 @@ public class ModelTest
             true,
             true,
             true
-        }; 
+        };
 
-        SLLModel model = new SLLModel();
-        model.InputCount = 12;
-        model.InnerCount = 16;
-        model.OutputCount = 11;
+        SLLModel model = new SLLModel(2, 2, 12, 16, 11, 1, new Random());
         model.Connections = connections;
 
         for (int i = 0; i < model.ConnectionCount; i++)

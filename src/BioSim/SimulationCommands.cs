@@ -4,19 +4,29 @@ namespace BioSim;
 
 public class CreateCommand : Command
 {
-    public CreateCommand(BioSimulator simulator) : base(simulator) { _minArgs = 2; }
+    public CreateCommand(BioSimulator simulator) : base(simulator)
+    {
+        _minArgs = 2;
+        _bannendWords.Add("all");
+    }
 
     protected override string Run(string[] args)
     {
-        if (!File.Exists(args[1]))
+        bool defaultSettings = args[1] == "default";
+
+        if (!defaultSettings && !File.Exists(args[1]))
         {
             return $"this file does not exist: {args[1]}";
         }
-        string jsonString = File.ReadAllText(args[1]);
 
-        JsonSerializerOptions options = new JsonSerializerOptions();
-        options.Converters.Add(new SimulationSettingsConverter());
-        SimulationSettings settings = JsonSerializer.Deserialize<SimulationSettings>(jsonString);
+        SimulationSettings settings = new SimulationSettings();
+
+        if (!defaultSettings)
+        {
+            string jsonString = File.ReadAllText(args[1]);
+            settings = JsonSerializer.Deserialize<SimulationSettings>(jsonString);
+        }
+
         if (settings == null)
         {
             return "something went wrong reading simulation settings";
@@ -26,14 +36,18 @@ public class CreateCommand : Command
             return "the setting version does not match";
         }
 
-        SLLModel model = new SLLModel(settings.mutateChance, settings.mutateStrength);
-        model.InnerCount = settings.innerCount;
-
         Simulation sim = new Simulation(settings);
 
-        sim.Setup();
+        if (_simulator.Simulations.ContainsKey(args[0]))
+        {
+            _simulator.Simulations[args[0]] = sim;
+        }
+        else
+        {
+            _simulator.Simulations.Add(args[0], sim);
+        }
 
-        _simulator.Simulations.Add(args[0], sim);
+        HelperFunctions.SaveSimulation($"../../saves/{args[0]}.json", sim);
 
         return "";
     }
@@ -42,17 +56,16 @@ public class CreateCommand : Command
 
 public class QuitCommand : Command
 {
-    public QuitCommand(BioSimulator simulator) : base(simulator) { _minArgs = 0; }
+    public QuitCommand(BioSimulator simulator) : base(simulator)
+    {
+        _minArgs = 0;
+    }
 
     protected override string Run(string[] args)
     {
-        JsonSerializerOptions options = new JsonSerializerOptions();
-        options.IncludeFields = true;
-
         foreach (var item in _simulator.Simulations)
         {
-            string jsonString = JsonSerializer.Serialize(item.Value, options);
-            File.WriteAllText($"../../saves/{item.Key}.json", jsonString);
+            HelperFunctions.SaveSimulation($"../../saves/{item.Key}.json", item.Value);
         }
 
         _simulator.Running = false;
@@ -97,17 +110,21 @@ public class DeleteCommand : Command
 
     protected override string Run(string[] args)
     {
+        if (args.Contains("all"))
+        {
+            _simulator.Simulations.Clear();
+            foreach (var item in Directory.GetFiles("../../saves/"))
+            {
+                File.Delete(item);
+            }
+        }
         if (!_simulator.Simulations.ContainsKey(args[0]))
         {
             return $"this simulation does not exists: {args[0]}";
         }
-        if (args.Contains("save"))
-        {
-            Simulation sim = _simulator.Simulations[args[0]];
-            string jsonString = JsonSerializer.Serialize<Simulation>(sim);
-            File.WriteAllText($"../../saves/{args[0]}.json", jsonString);
-        }
+
         _simulator.Simulations.Remove(args[0]);
+        File.Delete($"../../saves/{args[0]}");
         return "";
     }
 }
@@ -195,11 +212,7 @@ public class ExportStateCommand : Command
             return $"{args[1]} is a directory, not a file";
         }
 
-        JsonSerializerOptions options = new JsonSerializerOptions();
-        options.WriteIndented = true;
-
-        string jsonString = JsonSerializer.Serialize<Simulation>(_simulator.Simulations[args[0]], options);
-        File.WriteAllText(args[1], jsonString);
+        HelperFunctions.SaveSimulation(args[1], _simulator.Simulations[args[0]]);
 
         return "";
     }
@@ -281,5 +294,18 @@ public class AutoSaveCommand : Command
         }
 
         return output;
+    }
+}
+
+public class ActionCommand : Command
+{
+    public ActionCommand(BioSimulator simulator) : base(simulator)
+    {
+        _minArgs = 3;
+    }
+
+    protected override string Run(string[] args)
+    {
+        throw new NotImplementedException();
     }
 }

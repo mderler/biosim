@@ -6,10 +6,7 @@ public static class HelperFunctions
 {
     public static void SaveSimulation(string path, Simulation simulation)
     {
-        JsonSerializerOptions options = new JsonSerializerOptions();
-        options.IncludeFields = true;
-
-        string jsonString = JsonSerializer.Serialize<Simulation>(simulation, options);
+        string jsonString = JsonSerializer.Serialize<Simulation>(simulation);
         File.WriteAllText(path, jsonString);
     }
 }

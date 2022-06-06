@@ -162,6 +162,7 @@ public class SimulationConverter : JsonConverter<Simulation>
 
         int currentStep = 0;
         int CurrentGeneration = 0;
+        byte currentState = 0;
 
         while (reader.Read())
         {
@@ -181,8 +182,64 @@ public class SimulationConverter : JsonConverter<Simulation>
                 }
                 if (name == "dits")
                 {
-                    dits = JsonSerializer.Deserialize<List<Dit>>(ref reader);
-                    reader.Skip();
+                    SLLModel model = new SLLModel(
+                        settings.mutateChance, settings.mutateStrength, settings.inputFunctions.Length,
+                        settings.innerCount, settings.outputFunctions.Length, settings.connectionCount, new Random());
+
+                    reader.Read();
+                    while (reader.TokenType != JsonTokenType.EndArray)
+                    {
+                        List<(int, int, float, bool)> conns = new List<(int, int, float, bool)>();
+
+                        while (reader.TokenType != JsonTokenType.Number)
+                        {
+                            reader.Read();
+                        }
+
+                        int x;
+                        int y;
+
+                        x = reader.GetInt32();
+                        reader.Read();
+                        y = reader.GetInt32();
+
+
+                        while (reader.TokenType != JsonTokenType.StartArray)
+                        {
+                            reader.Read();
+                        }
+                        reader.Read();
+
+                        while (true)
+                        {
+                            reader.Read();
+
+                            if (reader.TokenType == JsonTokenType.EndObject)
+                            {
+                                break;
+                            }
+
+                            (int, int, float, bool) conn;
+                            conn.Item1 = reader.GetInt32();
+                            reader.Read();
+                            conn.Item2 = reader.GetInt32();
+                            reader.Read();
+                            conn.Item3 = reader.GetSingle();
+                            reader.Read();
+                            conn.Item4 = reader.GetBoolean();
+
+                            conns.Add(conn);
+
+                            reader.Read();
+                            reader.Read();
+                        }
+
+                        var nmodel = model.Copy();
+                        nmodel.Connections = conns.ToArray();
+                        dits.Add(new Dit((x, y), nmodel));
+
+                        reader.Read();
+                    }
                     continue;
                 }
                 if (name == nameof(simulation.CurrentStep))
@@ -195,10 +252,16 @@ public class SimulationConverter : JsonConverter<Simulation>
                     CurrentGeneration = reader.GetInt32();
                     continue;
                 }
+                if (name == nameof(simulation.CurrentState))
+                {
+                    currentState = reader.GetByte();
+                    continue;
+                }
             }
 
         }
         simulation = new Simulation(settings);
+        simulation.SimEnv.Dits = dits;
 
         return simulation;
     }
@@ -207,7 +270,7 @@ public class SimulationConverter : JsonConverter<Simulation>
     {
         string[] excluded = {
             nameof(value.ModelTemplate),
-            nameof(value.RandomNumberGenerator),
+            nameof(value.RNG),
             nameof(value.SimMap),
             nameof(value.SimEnv)
         };
@@ -237,8 +300,34 @@ public class SimulationConverter : JsonConverter<Simulation>
 
         writer.WritePropertyName("dits");
 
-        string jsonStringDits = JsonSerializer.Serialize<List<Dit>>(value.SimEnv.Dits);
-        writer.WriteRawValue(jsonStringDits);
+        writer.WriteStartArray();
+        foreach (var dit in value.SimEnv.Dits)
+        {
+            writer.WriteStartObject();
+
+            writer.WritePropertyName("Position");
+            writer.WriteStartArray();
+            writer.WriteNumberValue(dit.Position.x);
+            writer.WriteNumberValue(dit.Position.y);
+            writer.WriteEndArray();
+
+            writer.WritePropertyName("Connections");
+            writer.WriteStartArray();
+            foreach (var con in dit.Model.Connections)
+            {
+                writer.WriteStartArray();
+                writer.WriteNumberValue(con.src);
+                writer.WriteNumberValue(con.dst);
+                writer.WriteNumberValue(con.wht);
+                writer.WriteBooleanValue(con.act);
+                writer.WriteEndArray();
+            }
+            writer.WriteEndArray();
+
+            writer.WriteEndObject();
+        }
+
+        writer.WriteEndArray();
 
         writer.WriteEndObject();
     }

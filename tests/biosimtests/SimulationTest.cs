@@ -68,10 +68,9 @@ public class SimulationTest
         settings.seed = 0;
         settings.inputFunctions = inputFunctions;
         settings.outputFunctions = outputFunctions;
+        settings.mapPath = path;
 
         Simulation simulation = new Simulation(settings);
-
-        simulation.Setup();
 
         MagickImageCollection collection = new MagickImageCollection();
         MagickReadSettings mrs = new MagickReadSettings();

@@ -1,8 +1,14 @@
+using System.Text.Json.Serialization;
+
 namespace BioSim;
 
 // one model
-public class SLLModel : Model
+public class SLLModel
 {
+    public float MutateChance { get; set; }
+    public float MutateStrength { get; set; }
+    public Random RNG { get; set; }
+
     public int InputCount { get; set; }
     public int InnerCount { get; set; }
     public int OutputCount { get; set; }
@@ -41,30 +47,20 @@ public class SLLModel : Model
     }
 
     // constructor
-    public SLLModel(float mutateChance, float mutateStrength, Random rng) :
-        base(mutateChance, mutateStrength, rng)
+    public SLLModel(
+        float mutateChance, float mutateStrength, int inputCount,
+        int innerCount, int outputCount, int connectionCount, Random rng)
     {
-        _connectionCount = 0;
+        _connectionCount = connectionCount;
         _connections = new List<(int, int, float, bool)>();
-    }
-
-    // constructor
-    public SLLModel(float mutateChance, float mutateStrength) :
-        base(mutateChance, mutateStrength)
-    {
-        _connectionCount = 0;
-        _connections = new List<(int, int, float, bool)>();
-    }
-
-    // constructor
-    public SLLModel()
-    {
-        _connectionCount = 0;
-        _connections = new List<(int, int, float, bool)>();
+        InputCount = inputCount;
+        InnerCount = innerCount;
+        OutputCount = outputCount;
+        RNG = rng;
     }
 
     // get output out of input
-    override public bool[] GetOutput(float[] input)
+    public bool[] GetOutput(float[] input)
     {
         bool[] output = new bool[OutputCount];
         float[] tmp = new float[InnerCount + OutputCount];
@@ -89,7 +85,7 @@ public class SLLModel : Model
     }
 
     // randomize connections and weights
-    override public void Randomize()
+    public void Randomize()
     {
         for (int i = 0; i < _connectionCount; i++)
         {
@@ -117,7 +113,7 @@ public class SLLModel : Model
     }
 
     // change connections or weights
-    override public void Mutate()
+    public void Mutate()
     {
         if (RNG.NextSingle() < MutateChance)
         {
@@ -230,14 +226,13 @@ public class SLLModel : Model
     }
 
     // return copy of the model
-    public override Model Copy()
+    public SLLModel Copy()
     {
-        SLLModel model = new SLLModel(this.MutateChance, this.MutateStrength, this.RNG)
+        SLLModel model = new SLLModel(
+            this.MutateChance, this.MutateStrength, this.InputCount,
+            this.InnerCount, this.OutputCount, this.ConnectionCount, this.RNG)
         {
-            Connections = this.Connections,
-            InputCount = this.InputCount,
-            InnerCount = this.InnerCount,
-            OutputCount = this.OutputCount
+            Connections = this.Connections
         };
 
         model.ConnectionCount = this._connectionCount;

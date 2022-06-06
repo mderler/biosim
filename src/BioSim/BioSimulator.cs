@@ -11,14 +11,23 @@ public class BioSimulator
     }
 
     private Dictionary<string, Command> _commands;
+    private DateTime _last;
 
     public bool Running { get; set; }
     public bool AutoSave { get; set; }
+
+    public ActionManager SimActionManager
+    {
+        get;
+    }
 
     public BioSimulator()
     {
         Running = true;
         AutoSave = true;
+        SimActionManager = new ActionManager();
+        _last = DateTime.Now;
+
         Simulations = new Dictionary<string, Simulation>();
 
         FunctionFactory.RegisterIOFunction("near_to_east", InputFunctions.NearToEast);
@@ -42,17 +51,14 @@ public class BioSimulator
         _commands.Add("autosave", new AutoSaveCommand(this));
 
         // load sims
-        JsonSerializerOptions options = new JsonSerializerOptions();
-        options.IncludeFields = true;
 
-        /*
         var simsPaths = Directory.EnumerateFiles("../../saves/");
         foreach (var item in simsPaths)
         {
-            Simulation sim = JsonSerializer.Deserialize<Simulation>(item, options);
-            Simulations.Add(new FileInfo(item).Name, sim);
+            string jsonString = File.ReadAllText(item);
+            Simulation sim = JsonSerializer.Deserialize<Simulation>(jsonString);
+            Simulations.Add(new FileInfo(item).Name.Split('.')[0], sim);
         }
-        */
     }
 
     public void Run()
@@ -131,13 +137,25 @@ public class BioSimulator
         return thread;
     }
 
-    List<Simulation> _runningSims = new List<Simulation>();
+    private List<Simulation> _runningSims = new List<Simulation>();
     private void UpdateSimulations()
     {
         foreach (var item in _runningSims)
         {
             item.Update();
         }
+
+        if (AutoSave && (DateTime.Now - _last > TimeSpan.FromMinutes(30d)))
+        {
+            System.Console.WriteLine("asdasdsad");
+            foreach (var item in Simulations)
+            {
+                HelperFunctions.SaveSimulation($"../../saves/{item.Key}.json", item.Value);
+            }
+
+            _last = DateTime.Now;
+        }
+
     }
 
     private class StringHolder
