@@ -7,8 +7,11 @@ namespace BioSim;
 [JsonConverter(typeof(SimulationConverter))]
 public class Simulation
 {
+    // current state of the simulation
     public SimulationState CurrentState { get; set; }
+    // the map to be used in the simulation
     private Map _simMap;
+    // get set the map
     public Map SimMap
     {
         get => _simMap;
@@ -24,7 +27,9 @@ public class Simulation
         }
     }
 
+    // random number generator
     private Random _rnd;
+    // get set the RNG
     public Random RNG
     {
         get
@@ -43,7 +48,10 @@ public class Simulation
             ModelTemplate.RNG = value;
         }
     }
+
+    // template of the Model to be used for every dit
     private SLLModel _modelTemplate;
+    // get set model template
     public SLLModel ModelTemplate
     {
         get => _modelTemplate;
@@ -58,20 +66,26 @@ public class Simulation
             }
         }
     }
+    // the simulation
     public SimulationEnviroment SimEnv { get; private set; }
 
+    // get private set current step
     public int CurrentStep
     {
         get;
         private set;
     }
+
+    // get private set current generation
     public int CurrentGeneration
     {
         get;
         private set;
     }
 
+    // simulation settings
     private SimulationSettings _settings;
+    // get set settings
     public SimulationSettings Settings
     {
         get => _settings;

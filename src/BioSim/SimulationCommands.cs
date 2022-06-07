@@ -2,14 +2,17 @@ using System.Text.Json;
 
 namespace BioSim;
 
+// create new sim
 public class CreateCommand : Command
 {
+    // constructor
     public CreateCommand(BioSimulator simulator) : base(simulator)
     {
         _minArgs = 2;
         _bannendWords.Add("all");
     }
 
+    // run command
     protected override string Run(string[] args)
     {
         bool defaultSettings = args[1] == "default";
@@ -54,13 +57,16 @@ public class CreateCommand : Command
 
 }
 
+// quit command
 public class QuitCommand : Command
 {
+    // constructor
     public QuitCommand(BioSimulator simulator) : base(simulator)
     {
         _minArgs = 0;
     }
 
+    // run command
     protected override string Run(string[] args)
     {
         foreach (var item in _simulator.Simulations)
@@ -73,10 +79,13 @@ public class QuitCommand : Command
     }
 }
 
+// run simulation
 public class RunCommand : Command
 {
+    // constructor
     public RunCommand(BioSimulator simulator) : base(simulator) { _minArgs = 1; }
 
+    // run command
     protected override string Run(string[] args)
     {
         if (!_simulator.Simulations.ContainsKey(args[0]))
@@ -89,10 +98,13 @@ public class RunCommand : Command
     }
 }
 
+// halt simulation
 public class HaltCommand : Command
 {
+    // constructor
     public HaltCommand(BioSimulator simulator) : base(simulator) { _minArgs = 1; }
 
+    // run command
     protected override string Run(string[] args)
     {
         if (!_simulator.Simulations.ContainsKey(args[0]))
@@ -104,10 +116,13 @@ public class HaltCommand : Command
     }
 }
 
+// delete simulation
 public class DeleteCommand : Command
 {
+    // constructor
     public DeleteCommand(BioSimulator simulator) : base(simulator) { _minArgs = 1; }
 
+    // run command
     protected override string Run(string[] args)
     {
         if (args.Contains("all"))
@@ -129,10 +144,13 @@ public class DeleteCommand : Command
     }
 }
 
+// show simulations
 public class ShowCommand : Command
 {
+    // constructor
     public ShowCommand(BioSimulator simulator) : base(simulator) { _minArgs = 0; }
 
+    // run command
     protected override string Run(string[] args)
     {
         string output = "";
@@ -156,10 +174,13 @@ public class ShowCommand : Command
     }
 }
 
+// create template
 public class CreateTemplateCommand : Command
 {
+    // constructor
     public CreateTemplateCommand(BioSimulator simulator) : base(simulator) { _minArgs = 1; }
 
+    // run command
     protected override string Run(string[] args)
     {
         char[] sarr = { '/', '\\' };
@@ -185,13 +206,16 @@ public class CreateTemplateCommand : Command
     }
 }
 
+// export simulation save
 public class ExportStateCommand : Command
 {
+    // constructor
     public ExportStateCommand(BioSimulator simulator) : base(simulator)
     {
         _minArgs = 2;
     }
 
+    // run command
     protected override string Run(string[] args)
     {
         if (!_simulator.Simulations.ContainsKey(args[0]))
@@ -218,13 +242,16 @@ public class ExportStateCommand : Command
     }
 }
 
+// import simulation save
 public class ImportStateCommand : Command
 {
+    // constructor
     public ImportStateCommand(BioSimulator simulator) : base(simulator)
     {
         _minArgs = 2;
     }
 
+    // run command
     protected override string Run(string[] args)
     {
         if (!File.Exists(args[1]))
@@ -246,10 +273,13 @@ public class ImportStateCommand : Command
     }
 }
 
+// list functions
 public class FuncCommand : Command
 {
+    // constructor
     public FuncCommand(BioSimulator simulator) : base(simulator) { }
 
+    // run command
     protected override string Run(string[] args)
     {
         string output = "";
@@ -270,13 +300,16 @@ public class FuncCommand : Command
     }
 }
 
+// toggle autosave
 public class AutoSaveCommand : Command
 {
+    // constructor
     public AutoSaveCommand(BioSimulator simulator) : base(simulator)
     {
         _minArgs = 1;
     }
 
+    // run command
     protected override string Run(string[] args)
     {
         string output = "";
@@ -297,13 +330,16 @@ public class AutoSaveCommand : Command
     }
 }
 
+// create new action
 public class ActionCommand : Command
 {
+    // constructor
     public ActionCommand(BioSimulator simulator) : base(simulator)
     {
         _minArgs = 3;
     }
 
+    // run command
     protected override string Run(string[] args)
     {
         throw new NotImplementedException();

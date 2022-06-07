@@ -3,7 +3,9 @@ namespace BioSim;
 // The Living thing that involves
 public class Dit
 {
+    // get set position of dit
     public (int x, int y) Position { get; set; }
+    // the model the dit uses
     public SLLModel Model { get; set; }
 
     // constructor

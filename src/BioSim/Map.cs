@@ -5,6 +5,7 @@ namespace BioSim;
 // stores the Map data
 public class Map
 {
+    // enum to define the cell type of and coordinate
     public enum CellType
     {
         space = 0,
@@ -20,10 +21,14 @@ public class Map
         ( 20,  20,  20, 2)
     };
 
+    // contains all cell types for the entire map
     private CellType[][] _mapData;
+    // raw pixel data of map
     public byte[] RawData { get; }
 
+    // width of map
     public int Width { get; private set; }
+    // height of map
     public int Height { get; private set; }
 
     // constructor

@@ -2,25 +2,33 @@ using System.Text.Json;
 
 namespace BioSim;
 
+// Class that controls the Terminal
 public class BioSimulator
 {
+    // get and set loaded Simulations
     public Dictionary<string, Simulation> Simulations
     {
         get;
         private set;
     }
 
+    // registerd commands
     private Dictionary<string, Command> _commands;
+    // last auto save
     private DateTime _last;
 
+    // get and set; if false, the programs stops
     public bool Running { get; set; }
+    // get and set; if true, the simulations will be saved automaticly every 30min
     public bool AutoSave { get; set; }
 
+    // get ActionManager
     public ActionManager SimActionManager
     {
         get;
     }
 
+    // constructor
     public BioSimulator()
     {
         Running = true;
@@ -61,6 +69,7 @@ public class BioSimulator
         }
     }
 
+    // run the Bio Simulator
     public void Run()
     {
         StringHolder strHolder = new StringHolder();
@@ -114,15 +123,17 @@ public class BioSimulator
         }
     }
 
-    private void GetInput(object obj)
+    // set command line input
+    private void SetInput(object obj)
     {
         var input = (StringHolder)obj;
         input.str = Console.ReadLine();
     }
 
+    // start and get the Thread that handles the input
     private Thread StartInputThread(StringHolder strHolder)
     {
-        Thread thread = new Thread(GetInput);
+        Thread thread = new Thread(SetInput);
         thread.Start(strHolder);
 
         _runningSims.Clear();
@@ -137,7 +148,9 @@ public class BioSimulator
         return thread;
     }
 
+    // list of simulations that are running
     private List<Simulation> _runningSims = new List<Simulation>();
+    // update the running simulations
     private void UpdateSimulations()
     {
         foreach (var item in _runningSims)
@@ -158,6 +171,7 @@ public class BioSimulator
 
     }
 
+    // class that holds a string
     private class StringHolder
     {
         public string str;

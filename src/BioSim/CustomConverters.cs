@@ -4,8 +4,12 @@ using System.Text.Json.Serialization;
 
 namespace BioSim;
 
+// here are all custom converters to serialize some classes
+
+// used to serialize Simulation settings
 public class SimulationSettingsConverter : JsonConverter<SimulationSettings>
 {
+    // read json file and return the setting
     public override SimulationSettings Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
         var fields = typeof(SimulationSettings).GetFields();
@@ -90,6 +94,7 @@ public class SimulationSettingsConverter : JsonConverter<SimulationSettings>
         return settings;
     }
 
+    // write the json file with the setting
     public override void Write(Utf8JsonWriter writer, SimulationSettings value, JsonSerializerOptions options)
     {
         writer.WriteStartObject();
@@ -150,8 +155,10 @@ public class SimulationSettingsConverter : JsonConverter<SimulationSettings>
     }
 }
 
+// serialize the simulation class
 public class SimulationConverter : JsonConverter<Simulation>
 {
+    // read json file and return a simulation
     public override Simulation Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
         Simulation simulation;
@@ -266,6 +273,7 @@ public class SimulationConverter : JsonConverter<Simulation>
         return simulation;
     }
 
+    // write a json file with a simulation
     public override void Write(Utf8JsonWriter writer, Simulation value, JsonSerializerOptions options)
     {
         string[] excluded = {
