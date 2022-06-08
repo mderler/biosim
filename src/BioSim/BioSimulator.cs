@@ -60,7 +60,14 @@ public class BioSimulator
 
         // load sims
 
-        var simsPaths = Directory.EnumerateFiles("../../saves/");
+        const string savePath = "../../saves/";
+
+        if (!Directory.Exists(savePath))
+        {
+            Directory.CreateDirectory(savePath);
+        }
+
+        var simsPaths = Directory.EnumerateFiles(savePath);
         foreach (var item in simsPaths)
         {
             string jsonString = File.ReadAllText(item);

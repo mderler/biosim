@@ -1,15 +1,16 @@
 using Xunit;
 using BioSim;
-using System;
 using System.IO;
 using ImageMagick;
 
 namespace biosimtests;
 
+// test the simulation class
 public class SimulationTest
 {
     private const string _mapImagefn = @"..\..\..\..\..\res\testres\small.png";
 
+    // test construction
     [Fact]
     public void TestConstuct()
     {
@@ -18,6 +19,7 @@ public class SimulationTest
         Simulation simulation = new Simulation(settings);
     }
 
+    // test update method
     [Fact]
     public void TestUpdate()
     {
@@ -43,6 +45,7 @@ public class SimulationTest
         Assert.False(simulation.Update());
     }
 
+    // test a whole simulation walkthrough
     [Fact]
     public void TestWholeSim()
     {
@@ -62,13 +65,16 @@ public class SimulationTest
         SimulationSettings settings = new SimulationSettings();
         settings.initialPopulation = 1000;
         settings.generations = 20;
-        settings.steps = 100;
+        settings.steps = 380;
         settings.minBirthAmount = 2;
         settings.maxBirthAmount = 10;
         settings.seed = 0;
         settings.inputFunctions = inputFunctions;
         settings.outputFunctions = outputFunctions;
         settings.mapPath = path;
+        settings.connectionCount = 20;
+        settings.innerCount = 5;
+
 
         Simulation simulation = new Simulation(settings);
 
@@ -82,7 +88,7 @@ public class SimulationTest
         while (simulation.Update())
         {
             collection.Add(new MagickImage(simulation.SimEnv.ReadData(), mrs));
-            collection[counter].AnimationDelay = 10;
+            collection[counter].AnimationDelay = 5;
             counter++;
         }
 

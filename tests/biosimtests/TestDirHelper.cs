@@ -1,9 +1,9 @@
-using System;
-using System.IO;
 using ImageMagick;
 
+// class to help test with directories
 static class TestDirHelper
 {
+    // create a testimage with provided data and path
     public static void CreateTestImage(byte[] data, int width, string filename)
     {
         MagickReadSettings mrs = new MagickReadSettings();

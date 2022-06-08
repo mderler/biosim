@@ -3,10 +3,13 @@ using Xunit;
 using System;
 namespace biosimtests;
 
+// test the map class
 public class MapTest
 {
+    // path to test image
     private const string _imageDir = "../../../../../tmp/image.png";
 
+    // test construction
     [Fact]
     public void TestConstuct()
     {
@@ -15,6 +18,7 @@ public class MapTest
         Map map = new Map(_imageDir);
     }
 
+    // test map with one pixel
     [Fact]
     public void TestDataPixel()
     {
@@ -25,6 +29,7 @@ public class MapTest
         Assert.Equal<Map.CellType>(Map.CellType.space, map.GetSpot(0, 0));
     }
 
+    // test the convertion between pixel to cells
     [Fact]
     public void TestData()
     {
@@ -103,6 +108,7 @@ public class MapTest
         Assert.Equal<Map.CellType[]>(expected, actual);
     }
 
+    // test the exeption
     [Fact]
     public void TestException()
     {
@@ -114,6 +120,7 @@ public class MapTest
         Assert.ThrowsAny<Exception>(CreateMap);
     }
 
+    // test reading data
     [Fact]
     public void TestReadData()
     {

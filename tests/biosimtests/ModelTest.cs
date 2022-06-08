@@ -4,14 +4,17 @@ using System;
 
 namespace biosimtests;
 
+// test the model class
 public class ModelTest
 {
+    // test construction
     [Fact]
     public void TestConstuct()
     {
         SLLModel model = new SLLModel(2, 2, 1, 1, 1, 1, new Random());
     }
 
+    // test the Randomize method
     [Fact]
     public void TestRandom()
     {
@@ -45,6 +48,7 @@ public class ModelTest
         }
     }
 
+    // test the mutate method
     [Fact]
     public void TestMutate()
     {
@@ -87,6 +91,7 @@ public class ModelTest
         }
     }
 
+    // test the clean model method
     [Fact]
     public void TestCleanModel()
     {

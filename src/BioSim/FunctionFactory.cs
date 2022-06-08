@@ -16,12 +16,22 @@ public static class FunctionFactory
     // Store Function
     public static void RegisterIOFunction(string name, InputFunction func)
     {
+        if (_registerdInputFunctions.ContainsKey(name))
+        {
+            _registerdInputFunctions[name] = func;
+            return;
+        }
         _registerdInputFunctions.Add(name, func);
     }
 
     // Store Function
     public static void RegisterIOFunction(string name, OutputFunction func)
     {
+        if (_registerdOutputFunctions.ContainsKey(name))
+        {
+            _registerdOutputFunctions[name] = func;
+            return;
+        }
         _registerdOutputFunctions.Add(name, func);
     }
 }

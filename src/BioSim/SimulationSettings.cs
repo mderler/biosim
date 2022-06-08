@@ -2,6 +2,7 @@ using System.Text.Json.Serialization;
 
 namespace BioSim;
 
+// all the settings rquired to run a simulation
 [JsonConverter(typeof(SimulationSettingsConverter))]
 public class SimulationSettings
 {
