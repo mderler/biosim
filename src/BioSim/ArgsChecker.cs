@@ -8,6 +8,11 @@ public class ArgsChecker
     // minimum amount of arguments the user must provide
     public int MinArgs { get; set; }
 
+    public ArgsChecker()
+    {
+        BannendWords = new List<string>();
+    }
+
     // check the arguments
     public bool Check(string[] args, out string error)
     {

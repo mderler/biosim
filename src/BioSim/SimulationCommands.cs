@@ -88,6 +88,14 @@ public class RunCommand : Command
     // run command
     protected override string Run(string[] args)
     {
+        if (args[0] == "all")
+        {
+            foreach (var item in _simulator.Simulations)
+            {
+                item.Value.CurrentState = SimulationState.Running;
+            }
+            return "";
+        }
         if (!_simulator.Simulations.ContainsKey(args[0]))
         {
             return $"this simulation does not exists: {args[0]}";
@@ -164,7 +172,7 @@ public class ShowCommand : Command
                 case SimulationState.Finished: state = "finished"; break;
                 case SimulationState.Extinct: state = "extinct"; break;
             }
-            output += "---------\n";
+            output += "\n---------\n";
             output += item.Key + "\n";
             output += $"step: {item.Value.CurrentStep}/{item.Value.Settings.steps}; ";
             output += $"generation: {item.Value.CurrentGeneration}/{item.Value.Settings.generations}\n";

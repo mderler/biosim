@@ -168,7 +168,7 @@ public class SimulationConverter : JsonConverter<Simulation>
         List<Dit> dits = new List<Dit>();
 
         int currentStep = 0;
-        int CurrentGeneration = 0;
+        int currentGeneration = 0;
         byte currentState = 0;
 
         while (reader.Read())
@@ -256,7 +256,7 @@ public class SimulationConverter : JsonConverter<Simulation>
                 }
                 if (name == nameof(simulation.CurrentGeneration))
                 {
-                    CurrentGeneration = reader.GetInt32();
+                    currentGeneration = reader.GetInt32();
                     continue;
                 }
                 if (name == nameof(simulation.CurrentState))
@@ -268,6 +268,8 @@ public class SimulationConverter : JsonConverter<Simulation>
 
         }
         simulation = new Simulation(settings);
+        simulation.CurrentStep = currentStep;
+        simulation.CurrentGeneration = currentGeneration;
         simulation.SimEnv.Dits = dits;
 
         return simulation;

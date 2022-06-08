@@ -33,7 +33,7 @@ public class BioSimulator
     {
         Running = true;
         AutoSave = true;
-        SimActionManager = new ActionManager();
+        // SimActionManager = new ActionManager();
         _last = DateTime.Now;
 
         Simulations = new Dictionary<string, Simulation>();
@@ -126,7 +126,10 @@ public class BioSimulator
             Console.WriteLine(output);
             writing = false;
 
-            inputThread = StartInputThread(strHolder);
+            if (Running)
+            {
+                inputThread = StartInputThread(strHolder);
+            }
         }
     }
 
