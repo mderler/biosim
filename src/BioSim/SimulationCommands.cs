@@ -8,8 +8,8 @@ public class CreateCommand : Command
     // constructor
     public CreateCommand(BioSimulator simulator) : base(simulator)
     {
-        _minArgs = 2;
-        _bannendWords.Add("all");
+        _checker.MinArgs = 2;
+        _checker.BannendWords.Add("all");
     }
 
     // run command
@@ -63,7 +63,7 @@ public class QuitCommand : Command
     // constructor
     public QuitCommand(BioSimulator simulator) : base(simulator)
     {
-        _minArgs = 0;
+        _checker.MinArgs = 0;
     }
 
     // run command
@@ -83,7 +83,7 @@ public class QuitCommand : Command
 public class RunCommand : Command
 {
     // constructor
-    public RunCommand(BioSimulator simulator) : base(simulator) { _minArgs = 1; }
+    public RunCommand(BioSimulator simulator) : base(simulator) { _checker.MinArgs = 1; }
 
     // run command
     protected override string Run(string[] args)
@@ -102,7 +102,7 @@ public class RunCommand : Command
 public class HaltCommand : Command
 {
     // constructor
-    public HaltCommand(BioSimulator simulator) : base(simulator) { _minArgs = 1; }
+    public HaltCommand(BioSimulator simulator) : base(simulator) { _checker.MinArgs = 1; }
 
     // run command
     protected override string Run(string[] args)
@@ -120,7 +120,7 @@ public class HaltCommand : Command
 public class DeleteCommand : Command
 {
     // constructor
-    public DeleteCommand(BioSimulator simulator) : base(simulator) { _minArgs = 1; }
+    public DeleteCommand(BioSimulator simulator) : base(simulator) { _checker.MinArgs = 1; }
 
     // run command
     protected override string Run(string[] args)
@@ -148,7 +148,7 @@ public class DeleteCommand : Command
 public class ShowCommand : Command
 {
     // constructor
-    public ShowCommand(BioSimulator simulator) : base(simulator) { _minArgs = 0; }
+    public ShowCommand(BioSimulator simulator) : base(simulator) { _checker.MinArgs = 0; }
 
     // run command
     protected override string Run(string[] args)
@@ -178,7 +178,7 @@ public class ShowCommand : Command
 public class CreateTemplateCommand : Command
 {
     // constructor
-    public CreateTemplateCommand(BioSimulator simulator) : base(simulator) { _minArgs = 1; }
+    public CreateTemplateCommand(BioSimulator simulator) : base(simulator) { _checker.MinArgs = 1; }
 
     // run command
     protected override string Run(string[] args)
@@ -212,7 +212,7 @@ public class ExportStateCommand : Command
     // constructor
     public ExportStateCommand(BioSimulator simulator) : base(simulator)
     {
-        _minArgs = 2;
+        _checker.MinArgs = 2;
     }
 
     // run command
@@ -248,7 +248,7 @@ public class ImportStateCommand : Command
     // constructor
     public ImportStateCommand(BioSimulator simulator) : base(simulator)
     {
-        _minArgs = 2;
+        _checker.MinArgs = 2;
     }
 
     // run command
@@ -306,7 +306,7 @@ public class AutoSaveCommand : Command
     // constructor
     public AutoSaveCommand(BioSimulator simulator) : base(simulator)
     {
-        _minArgs = 1;
+        _checker.MinArgs = 1;
     }
 
     // run command
@@ -336,7 +336,7 @@ public class ActionCommand : Command
     // constructor
     public ActionCommand(BioSimulator simulator) : base(simulator)
     {
-        _minArgs = 3;
+        _checker.MinArgs = 3;
     }
 
     // run command

@@ -57,7 +57,6 @@ public class SimulationTest
 
         MagickImage image = new MagickImage(path);
 
-
         InputFunction[] inputFunctions = { InputFunctions.NearToEast, InputFunctions.NearToSouth };
         OutputFunction[] outputFunctions = {OutputFunctions.MoveNorth, OutputFunctions.MoveSouth,
                                             OutputFunctions.MoveWest, OutputFunctions.MoveEast};

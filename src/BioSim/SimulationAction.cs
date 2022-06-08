@@ -1,28 +1,28 @@
 namespace BioSim;
 
-public class SimulationAction
+public abstract class SimulationAction
 {
-    private string _actionString;
-    public string ActionString
-    {
-        get => _actionString;
-        set
-        {
-            _actionString = value;
-        }
-    }
+    protected string[] _args;
+    public Simulation Simulation { get; set; }
+    protected string _actionString;
+
+    public string Error { get; protected set; }
 
     // private (int gf, int gl, int sf, int sl)[]
 
     public SimulationAction(string eventString)
     {
-        ActionString = eventString;
+        _actionString = eventString;
     }
 
-    public SimulationAction() { }
-
-    public void Execute(Simulation simulation)
+    public void ExecuteAction()
     {
 
     }
+
+    protected virtual void Start() { }
+    protected virtual void Execute() { }
+    protected virtual void End() { }
+
+    public abstract SimulationAction Copy();
 }

@@ -11,9 +11,9 @@ public class CommandTest
         // constructor
         public TestCommand(BioSimulator simulator) : base(simulator)
         {
-            _minArgs = 2;
-            _bannendWords.Add("test");
-            _bannendWords.Add("hi");
+            _checker.MinArgs = 2;
+            _checker.BannendWords.Add("test");
+            _checker.BannendWords.Add("hi");
         }
 
         // run command
