@@ -73,14 +73,14 @@ public class Simulation
     public int CurrentStep
     {
         get;
-        private set;
+        set;
     }
 
     // get private set current generation
     public int CurrentGeneration
     {
         get;
-        private set;
+        set;
     }
 
     // simulation settings

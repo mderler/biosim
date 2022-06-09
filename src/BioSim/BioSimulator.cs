@@ -33,7 +33,7 @@ public class BioSimulator
     {
         Running = true;
         AutoSave = true;
-        SimActionManager = new ActionManager();
+        // SimActionManager = new ActionManager();
         _last = DateTime.Now;
 
         SimActionManager.AddAction("v", new VisualizeAction());
