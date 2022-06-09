@@ -5,12 +5,13 @@ public abstract class SimulationAction
     protected string[] _args;
     public Simulation Simulation { get; set; }
     protected string _actionString;
+    protected ArgsChecker _checker = new ArgsChecker();
 
     public string Error { get; protected set; }
 
     private (uint gf, uint gl, uint sf, uint sl)[] _executeTimes;
 
-    public SimulationAction(string eventString)
+    public string Setup(string eventString, string[] args)
     {
         _actionString = eventString;
 
@@ -21,6 +22,12 @@ public abstract class SimulationAction
         {
             uint[] times = new uint[4];
             string[] tmp = allTimes[i].Split(',');
+
+            if (tmp.Length != 4)
+            {
+                Error += "error reading times";
+                return Error;
+            }
 
             bool mistake = false;
 
@@ -46,13 +53,23 @@ public abstract class SimulationAction
             if (mistake)
             {
                 Error += "error reading times";
-                return;
+                return Error;
             }
 
             _executeTimes[i] = (times[0], times[1], times[2], times[3]);
         }
 
+        string error;
+        if (!_checker.Check(args, out error))
+        {
+            Error += error;
+            return Error;
+        }
+
+        return PSetup();
     }
+
+    protected virtual string PSetup() { return ""; }
 
     public void ExecuteAction()
     {

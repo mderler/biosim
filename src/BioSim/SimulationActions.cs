@@ -8,7 +8,12 @@ public class VisualizeAction : SimulationAction
     private MagickReadSettings _mrs;
     private int _frameTime;
 
-    public VisualizeAction(string actionString) : base(actionString)
+    public VisualizeAction()
+    {
+        _checker.MinArgs = 2;
+    }
+
+    protected override string PSetup()
     {
         char[] sarr = { '/', '\\' };
 
@@ -28,6 +33,8 @@ public class VisualizeAction : SimulationAction
         {
             Error += "second arg must be an integer\n";
         }
+
+        return Error;
     }
 
     protected override void Start()
@@ -52,7 +59,11 @@ public class VisualizeAction : SimulationAction
     }
 
     public override SimulationAction Copy()
+
     {
-        return new VisualizeAction(_actionString);
+        VisualizeAction action = new VisualizeAction();
+        action._args = _args;
+        action._actionString = _actionString;
+        return action;
     }
 }

@@ -36,6 +36,8 @@ public class BioSimulator
         SimActionManager = new ActionManager();
         _last = DateTime.Now;
 
+        SimActionManager.AddAction("v", new VisualizeAction());
+
         Simulations = new Dictionary<string, Simulation>();
 
         FunctionFactory.RegisterIOFunction("near_to_east", InputFunctions.NearToEast);
@@ -126,7 +128,10 @@ public class BioSimulator
             Console.WriteLine(output);
             writing = false;
 
-            inputThread = StartInputThread(strHolder);
+            if (Running)
+            {
+                inputThread = StartInputThread(strHolder);
+            }
         }
     }
 
@@ -167,7 +172,6 @@ public class BioSimulator
 
         if (AutoSave && (DateTime.Now - _last > TimeSpan.FromMinutes(30d)))
         {
-            System.Console.WriteLine("asdasdsad");
             foreach (var item in Simulations)
             {
                 HelperFunctions.SaveSimulation($"../../saves/{item.Key}.json", item.Value);
