@@ -342,6 +342,7 @@ public class ActionCommand : Command
     // run command
     protected override string Run(string[] args)
     {
-        throw new NotImplementedException();
+
+        return "";
     }
 }
